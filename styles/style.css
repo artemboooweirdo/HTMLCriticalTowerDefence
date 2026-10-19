@@ -1,0 +1,7 @@
+body {
+    /* nothing rn */
+    font-size: 20px;
+}
+.container {
+    display: grid;
+}
