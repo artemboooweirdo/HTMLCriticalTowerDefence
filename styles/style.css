@@ -5,3 +5,7 @@ body {
 .container {
     display: grid;
 }
+
+#gameCanvas {
+    border: 5px solid #000000;
+}
