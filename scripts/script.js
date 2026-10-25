@@ -1,5 +1,9 @@
 "use strict";
 
+const spawnButton = document.getElementById("spawnButton");
+const spawnInput = document.getElementById("spawnInput");
+
+
 //initialize the canvas
 setTimeout(() => {
   const canvas = document.getElementById("gameCanvas");
@@ -57,6 +61,7 @@ setTimeout(() => {
       speed: 3,
       type: "#514C50",
     },
+
   };
 
   class Enemy {
@@ -69,6 +74,7 @@ setTimeout(() => {
       this.sendTime = deploy[1];
       this.xPos = map.start.x;
       this.yPos = map.start.y;
+      this.overshoot = 0;
       this.health = template.health;
       this.speed = template.speed;
       this.type = template.type;
@@ -129,7 +135,7 @@ setTimeout(() => {
   }
 
   // Works
-  function calcMovement(xPos, yPos, xTarget, yTarget, speed) {
+  function calcMovement(xPos, yPos, xTarget, yTarget, speed, deltaTime, overshoot) {
     // this is the x component
     const xComponent = xTarget - xPos;
 
@@ -148,8 +154,8 @@ setTimeout(() => {
       : yComponent / magnitude;
 
     //apply speed to those vectors
-    const deltaX = speed * unitVectorX;
-    const deltaY = speed * unitVectorY;
+    const deltaX = speed * unitVectorX * (deltaTime / (1000/60));
+    const deltaY = speed * unitVectorY * (deltaTime / (1000/60));
 
     //the variables to return
     let newX = deltaX + xPos;
@@ -176,6 +182,7 @@ setTimeout(() => {
     return {
       x: newX,
       y: newY,
+      overshoot: overshoot,
     };
   }
   // Exapmle input is queuedEnemies[0]
@@ -199,6 +206,8 @@ setTimeout(() => {
 
   queueNormalEnemies();
 
+
+  //queue all enemies
   queuedEnemies.forEach((enemy) => {
     setTimeout(() => {
       spawnEnemy(enemy);
@@ -206,9 +215,10 @@ setTimeout(() => {
   });
 
   // Main Game Loop
+  let lastTime = 0;
   function gameLoop(timestamp) {
     // calculate deltaTime (time between frames)
-    let lastTime = 0;
+
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
 
@@ -219,7 +229,7 @@ setTimeout(() => {
     // DRAW
 
     // draw enemies
-    if (!(currentEnemies == [])) {
+    if (!(currentEnemies.length === 0)) {
       currentEnemies.forEach((enemy, index) => {
         checkTarget(enemy);
         const nextPos = calcMovement(
@@ -228,11 +238,14 @@ setTimeout(() => {
           enemy.targetLocation.x,
           enemy.targetLocation.y,
           enemy.speed,
+          deltaTime,
         );
         enemy.xPos = nextPos.x;
         enemy.yPos = nextPos.y;
         ctx.fillStyle = enemy.type;
         ctx.fillRect(enemy.xPos - 20, enemy.yPos - 20, 40, 40);
+
+        // enemy reaches base
         if (enemy.yPos == enemy.finish.y && enemy.xPos == enemy.finish.x) {
           currentEnemies.splice(index, 1);
           baseHp -= enemy.health;
@@ -257,8 +270,29 @@ setTimeout(() => {
 
   requestAnimationFrame(gameLoop);
 
-  // DEBUG
+  
+  
+  
+  
+  
+  
 
+  
+
+  spawnButton.addEventListener("click", () => {
+    const selectedEnemy = spawnInput.value;
+    console.log(`Spawning ${selectedEnemy}`);
+    if (templates[selectedEnemy]) {
+      const newEnemy = new Enemy(templates[selectedEnemy], map1, [1, 0]);
+      spawnEnemy(newEnemy);
+    } else {
+      console.log(`Invalid enemy type: ${selectedEnemy}`);
+    }
+  });
+
+
+
+  // DEBUG
   setTimeout(() => {
     console.log("test for code continuity");
     console.log(calcMovement(100, 100, 200, 200, 2));
@@ -269,5 +303,5 @@ setTimeout(() => {
     currentEnemies.forEach((enemy) => {
       enemy.health--;
     });
-  }, 1000);
+  }, 1000 * deltaTime / (1000/60));
 }, 100);

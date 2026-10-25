@@ -1,17 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>Welcome!</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Welcome!</title>
     <link rel="stylesheet" href="./styles/style.css" />
-</head>
-<body>
-    <div class="container"></div>
-	<canvas id="gameCanvas" height="600px" width="900px"></canvas>
-</body>
-<script src="./scripts/script.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init()</script>
+  </head>
+  <body>
+    <div class="container">
+      <select id="spawnInput" name="spawnInput">
+        <option value="dummy">Dummy</option>
+        <option value="speedy">Speedy</option>
+        <option value="slow">Slow</option>
+      </select>
+      <button id="spawnButton">Spawn</button>
+    </div>
+    <canvas id="gameCanvas" height="600px" width="900px"></canvas>
+  </body>
+  <!-- Eruda script goes first because it needs to load the console -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    eruda.init();
+  </script>
+  <!-- Rest of scripts -->
+    <script src="./scripts/script.js"></script>
 </html>
