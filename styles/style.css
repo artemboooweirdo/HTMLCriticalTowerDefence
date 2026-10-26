@@ -1,11 +1,22 @@
 body {
     /* nothing rn */
     font-size: 20px;
+    background-color: aqua;
 }
 .container {
     display: grid;
+    grid-template-rows: repeat(5,1fr);
+    grid-template-columns: repeat(5,1fr)
 }
 
 #gameCanvas {
     border: 5px solid #000000;
+    background-color: antiquewhite;
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+#customStats {
+    grid-area: 1 / -2 / -1 / -1;
+    display: grid;
+    visibility: hidden;
 }
