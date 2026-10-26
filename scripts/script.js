@@ -160,9 +160,22 @@ function gameLoop(timestamp) {
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
   // DRAW
+  ctx.beginPath();
+  ctx.moveTo(maps.map1.start.x , maps.map1.start.y);
+  for (let i = 0; i < maps.map1.pathCoords.length; i++) {
+    ctx.lineTo(maps.map1.pathCoords[i].x, maps.map1.pathCoords[i].y);
+  }
+  ctx.lineTo(maps.map1.finish.x, maps.map1.finish.y);
+  ctx.stroke()
 
   // draw enemies
   if (!(currentEnemies.length === 0)) {
+    currentEnemies.forEach((enemy, index) => {
+      if (enemy.health <= 0) {
+        currentEnemies.splice(index, 1);
+        console.log(`Enemy at index ${index} died`);
+      }
+    })
     currentEnemies.forEach((enemy, index) => {
       checkTarget(enemy);
       const nextPos = calcMovement(
@@ -177,8 +190,8 @@ function gameLoop(timestamp) {
       enemy.yPos = nextPos.y;
       ctx.fillStyle = enemy.type;
       ctx.fillRect(enemy.xPos - 20, enemy.yPos - 20, 40, 40);
-
-
+      ctx.font = "15px Impact, Charcoal, sans-serif";
+      ctx.lineWidth = 1;
       ctx.strokeText(enemy.health, enemy.xPos - 10, enemy.yPos - 10);
       ctx.fillStyle = "#0000ff";
       ctx.fillText(enemy.health, enemy.xPos - 10, enemy.yPos - 10);
@@ -194,9 +207,15 @@ function gameLoop(timestamp) {
   }
 
   // draw text
-  ctx.fillStyle = "#000000";
-  ctx.strokeText(baseHp, 100, 100);
-  ctx.fillText(baseHp, 100, 100);
+  ctx.font = "bold 56px Impact, Charcoal, sans-serif";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.strokeStyle = "#000000";
+  ctx.lineWidth = 8;
+  ctx.lineJoin = "round"
+  ctx.fillStyle = "#aa0000";
+  ctx.strokeText(baseHp, 0, 0);
+  ctx.fillText(baseHp, 0, 0);
 
   // draw towers??
 
@@ -212,6 +231,9 @@ spawnButton.addEventListener("click", () => {
   const selectedEnemy = spawnInput.value;
   console.log(`Spawning ${selectedEnemy}`);
   if (selectedEnemy == "custom") {
+    if (speedInput.value == 0) {
+      throw new Error("Enemy cant have a speed of 0!");
+    }
     const newEnemy = new Enemy({health: hpInput.value, speed: speedInput.value, type: typeInput.value,}, maps.map1, [1, 0]);
     currentEnemies.unshift(newEnemy);
   } else if (templates[selectedEnemy]) {

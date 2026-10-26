@@ -10,13 +10,26 @@ body {
 }
 
 #gameCanvas {
+
     border: 5px solid #000000;
     background-color: antiquewhite;
     grid-area: 1 / 1 / 2 / 2;
 }
 
 #customStats {
-    grid-area: 1 / -2 / -1 / -1;
+    grid-area: 3 / -2 / -1 / -1;
     display: grid;
     visibility: hidden;
+}
+
+#spawnButton {
+    grid-area: 2 / -2 / 3 / -1;
+    border-radius: 8px;
+}
+#spawnInput {
+    grid-area: 1 / -2 / 2 / -1;
+}
+button {
+    padding: 10;
+    
 }
