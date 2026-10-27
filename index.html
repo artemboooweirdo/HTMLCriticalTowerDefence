@@ -11,7 +11,6 @@
   </head>
   <body>
     <div class="container">
-      <header>Tower Defence Test Week 1</header>
       <select id="spawnInput">
         <option value="dummy">Dummy</option>
         <option value="speedy">Speedy</option>
@@ -26,8 +25,8 @@
         <input type="color" id="typeInput" placeholder="#000000" required/>
         <input type="number" id="speedInput" placeholder="Speed (e.g. 0)" required/>
       </div>
+      <canvas id="gameCanvas" height="600px" width="900px"></canvas>
     </div>
-    <canvas id="gameCanvas" height="600px" width="900px"></canvas>
   </body>
   <!-- Eruda script goes first because it needs to load the console -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>

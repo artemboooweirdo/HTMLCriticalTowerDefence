@@ -30,5 +30,7 @@ const maps = {
       x: 400,
       y: 500,
     },
-}};
+  },
+
+};
 export default maps;

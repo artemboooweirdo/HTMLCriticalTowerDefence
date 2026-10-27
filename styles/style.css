@@ -1,35 +1,44 @@
 body {
-    /* nothing rn */
-    font-size: 20px;
-    background-color: aqua;
+  /* nothing rn */
+  font-size: 20px;
+  background-color: aqua;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: auto;
 }
 .container {
-    display: grid;
-    grid-template-rows: repeat(5,1fr);
-    grid-template-columns: repeat(5,1fr)
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  margin: 0;
+  box-sizing: border-box;
+
 }
 
 #gameCanvas {
-
-    border: 5px solid #000000;
-    background-color: antiquewhite;
-    grid-area: 1 / 1 / 2 / 2;
+  border: 5px solid #000000;
+  background-color: antiquewhite;
+  grid-area: 1 / 1 / -1 / -2;
+  width: 80vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 #customStats {
-    grid-area: 3 / -2 / -1 / -1;
-    display: grid;
-    visibility: hidden;
+  grid-area: 3 / -2 / -1 / -1;
+  display: grid;
+  visibility: hidden;
 }
 
 #spawnButton {
-    grid-area: 2 / -2 / 3 / -1;
-    border-radius: 8px;
+  grid-area: 2 / -2 / 3 / -1;
+  border-radius: 8px;
 }
 #spawnInput {
-    grid-area: 1 / -2 / 2 / -1;
+  grid-area: 1 / -2 / 2 / -1;
 }
 button {
-    padding: 10;
-    
+  padding: 10;
 }
