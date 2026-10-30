@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Welcome!</title>
+    <link rel="stylesheet" href="./styles/style.css" />
+  </head>
+  <body>
+    <button id="placeTower">Place a tower</button>
+    <button id="startButton">Start</button>
+    <div class="container">
+      <select id="spawnInput">
+        <option value="dummy">Dummy</option>
+        <option value="speedy">Speedy</option>
+        <option value="slow">Slow</option>
+        <option value="rusher">Rusher</option>
+        <option value="dummyBoss">Dummy Boss</option>
+        <option value="custom">Custom</option>
+      </select>
+      <button id="spawnButton" formnovalidate>Spawn</button>
+      <div id="customStats">
+        <input type="number" id="hpInput" placeholder="Health" required />
+        <input type="color" id="typeInput" placeholder="#000000" required />
+        <input
+          type="number"
+          id="speedInput"
+          placeholder="Speed (e.g. 0)"
+          required
+        />
+      </div>
+      <canvas id="gameCanvas" height="720px" width="1200px"></canvas>
+    </div>
+  </body>
+  <!-- Eruda script goes first because it needs to load the console -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    eruda.init();
+  </script>
+  <!-- Rest of scripts -->
+  <script type="module" src="./scripts/enemyTemplates.js"></script>
+  <script type="module" src="./scripts/enemyClass.js"></script>
+  <script type="module" src="./scripts/script.js"></script>
+</html>
