@@ -31,7 +31,7 @@ export default class Enemy {
     this.id = 0;
   }
 
-  // 80 lines of code to review D:
+  // 100 lines of code to NOT review :D
   
   calcMovement(deltaTime) {
 
@@ -137,8 +137,12 @@ export default class Enemy {
   
   checkTarget() {
     if (this.xPos == this.targetLocation.x && this.yPos == this.targetLocation.y) {
+      if (this.targetIndex >= this.map.pathCoords.length) {
+        return;
+      }
       if (this.targetIndex == this.map.pathCoords.length - 1) {
         this.targetLocation = this.map.finish;
+        this.targetIndex = this.map.pathCoords.length;
     } else {
       this.targetIndex++;
       this.targetLocation = this.map.pathCoords[this.targetIndex];

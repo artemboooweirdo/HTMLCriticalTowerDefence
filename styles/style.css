@@ -16,7 +16,7 @@ body {
 }
 
 #gameCanvas {
-  border: 5px solid #000000;
+  border: 5px solid #00000069;
   background-color: antiquewhite;
   grid-area: 1 / 1 / -1 / -2;
   width: 80vw;
@@ -41,4 +41,13 @@ body {
 }
 button {
   padding: 10;
+}
+#startButton {
+  position: fixed;
+  margin: 10px;
+  width: 8vw;
+  height: 8vh;
+  bottom: 0;
+  left: 0;
+  visibility: visible;
 }
