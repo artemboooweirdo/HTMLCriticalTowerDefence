@@ -1,13 +1,14 @@
 'use strict';
-
+// IMPLEMENT THIS
 export default class Game {
   constructor(canvas, map) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.map = map;
-    this.round = null;
-    this.timeleft = null;
-    this.enemies = [];
+    this.round = 0;
+    this.timeleft = 0;
+    this.queuedEnemies = [];
+    this.currentEnemies = [];
     this.towers = [];
     this.baseHp = 100;
     this.hpBar = document.getElementById
@@ -15,9 +16,27 @@ export default class Game {
     this.state = "ready";
   }
   update(deltatime) {
-    
+
+  const timer = enemyLayouts.roundTime[round];
+
+  if (!timer) {
+    console.log("All waves complete");
+    return;
+  }
+  timer.update();
+      if (timer.getTime() <= 0) {
+    round++;
+
+    if (round < enemyLayouts.roundTime.length) {
+      queueEnemiesForRound(round);
+      loadEnemies();
+    } else {
+      console.log("All waves complete");
+    }
+  }
   }
   draw() {
+    
     this.enemies.forEach((enemy, i) => {
       this.ctx.fillStyle = enemy[i].type;
       this.ctx.fillRect(
@@ -55,4 +74,15 @@ export default class Game {
     this.ctx.fillStyle = "#000000";
     this.ctx.fillText(baseHp, 0, 0);
   }
+  queueEnemies(enemyList) {
+    this.queuedEnemies.push(...enemyList);
+  }
+  spawnEnemiesForRound(round) {
+    const roundEnemies = this.queuedEnemies.filter(enemy => enemy.round === round);
+    roundEnemies.forEach((enemy) => {
+      setTimeout(() => {
+        this.currentEnemies.push(enemy);
+      }, enemy.sendTime);
+    }
+  )}
 }

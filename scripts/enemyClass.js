@@ -167,6 +167,9 @@ export default class Enemy {
 
   damage(damage) {
     this.health -= damage;
+    if (this.health <= 0) {
+      console.log(`Enemy ${this.id} has died`);
+    }
   }
   freeze(length) {
     // This can freeze the enemy for a short period of time

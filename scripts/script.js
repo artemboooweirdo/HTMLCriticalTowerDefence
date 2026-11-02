@@ -5,9 +5,11 @@ import Enemy from "./enemyClass.js"; //Imports the enemy class
 import templates from "./enemyTemplates.js";
 import maps from "./mapTemplates.js";
 import enemyLayouts from "./enemyLayouts.js";
+import Tower from "./towerClass.js";
 import waveTimer from "./waveTimerClass.js";
-
+import Game from "./gameClass.js";
 // Load the UI font. It is called UIFont
+
 async function loadCustomFont() {
   try {
     // 1. Define the FontFace with a name and the relative path to your asset
@@ -26,6 +28,7 @@ async function loadCustomFont() {
     console.error("Failed to load font:", error);
   }
 }
+
 // guess what this does lmao
 loadCustomFont();
 
@@ -37,15 +40,30 @@ const hpInput = document.getElementById("hpInput");
 const speedInput = document.getElementById("speedInput");
 const typeInput = document.getElementById("typeInput");
 const startButton = document.getElementById("startButton");
+const towerButton = document.getElementById("placeTower");
 
 //initialize the canvas
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+//Init the bg image
+
+const bgImage = new Image();
+bgImage.src = './assets/images/Grassland.png'; // Set your source URL
+
+bgImage.onload = () => {
+  console.log("Background image loaded successfully!");
+  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height)
+}
+
 // Rounds and other misc
 let idCounter = 1;
 let round = 0;
 let baseHp = 100;
+let placingTower = false;
+let canvasX = 0;
+let canvasY = 0;
+let currentGame = null;
 
 // The map and the coords for da movement
 
@@ -54,6 +72,7 @@ let baseHp = 100;
 const queuedEnemies = [];
 let roundEnemies = [];
 const currentEnemies = [];
+const towers = [];
 
 // Gives each enemy a unique ID and puts them into the queued enemies for the "game"
 function queueEnemy(enemy) {
@@ -125,15 +144,9 @@ function gameLoop(timestamp) {
   // can improve this probably
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // DRAW PATH
-  ctx.beginPath();
-  ctx.moveTo(maps.map1.start.x, maps.map1.start.y);
-  for (let i = 0; i < maps.map1.pathCoords.length; i++) {
-    ctx.lineTo(maps.map1.pathCoords[i].x, maps.map1.pathCoords[i].y);
-  }
-  ctx.lineTo(maps.map1.finish.x, maps.map1.finish.y);
-  ctx.stroke();
-  //DRAW PATH
+
+  // Draw the map background image
+  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
   // draw enemies
 
@@ -147,7 +160,7 @@ function gameLoop(timestamp) {
       console.log(`Enemy at index ${i} died`);
     }
   }
-
+  // When the enemy reaches the base
   for (let i = currentEnemies.length - 1; i >= 0; i--) {
     if (i < 0) {
       throw new Error("No enemies");
@@ -199,7 +212,7 @@ function gameLoop(timestamp) {
   // draw time left
   ctx.font = "14px UIFont";
   ctx.fillStyle = "#000000"
-  ctx.fillText(`Time left: ${enemyLayouts.roundTime[round].getTime().toFixed(0)}`, 300, 0);
+  ctx.fillText(`Time left: ${enemyLayouts.roundTime[round].getTime().toFixed(0) ?? "You Win!"}`, 300, 0);
 
   // draw text
   ctx.font = "56px UIFont";
@@ -210,6 +223,12 @@ function gameLoop(timestamp) {
   ctx.fillText(baseHp, 0, 0);
 
   // draw towers??
+  if (placingTower) {
+    ctx.fillStyle = "rgba(0, 255, 0, 0.5)"; // semi-transparent green
+    ctx.beginPath();
+    ctx.arc(canvasX, canvasY, 50, 0, Math.PI * 2); // radius of 50
+    ctx.fill();
+  }
 
   //DRAW
 
@@ -219,7 +238,6 @@ function gameLoop(timestamp) {
 
 // Other stuff such as event listeners and such
 
-requestAnimationFrame(gameLoop);
 
 // Spawn button FULLY WORKS
 spawnButton.addEventListener("click", () => {
@@ -244,9 +262,26 @@ spawnButton.addEventListener("click", () => {
 });
 
 startButton.addEventListener("click", () => {
+  requestAnimationFrame(gameLoop);
   queueEnemiesForRound(1);
   loadEnemies();
+
+
+
+  // test
+  
+  currentGame = new Game(document.getElementById("gameCanvas"), baseHp, round, currentEnemies, towers);
+  
+  // test
+
+
   startButton.style.visibility = "hidden";
+});
+towerButton.addEventListener("click", () => {
+  console.log("Tower button clicked");
+  let placingTower = true;
+  towers.push(new Tower({ damage: 10, atkSpd: 1, range: 100, type: "basic" }, canvasX, canvasY));
+  // Implement tower placement logic here
 });
 
 // Checks if the dropdown menu is on custom FULLY WORKS
@@ -265,6 +300,13 @@ canvas.addEventListener("mousemove", (event) => {
   const cssX = event.offsetX - rect.left;
   const cssY = event.offsetY - rect.top;
   // 3. Scale the CSS coordinates to match the internal canvas resolution
-  const canvasX = Math.round((cssX / rect.width) * canvas.width);
-  const canvasY = Math.round((cssY / rect.height) * canvas.height);
+  canvasX = Math.round((cssX / rect.width) * canvas.width);
+  canvasY = Math.round((cssY / rect.height) * canvas.height);
+});
+canvas.addEventListener("click", (event) => {
+  if (placingTower) {
+    console.log(`Placing tower at (${canvasX}, ${canvasY})`);
+    // Implement tower placement logic here
+    placingTower = false; // Reset after placing
+  }
 });

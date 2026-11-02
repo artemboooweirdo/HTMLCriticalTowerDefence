@@ -11,12 +11,19 @@ export default class Tower {
         this.atkSpdBuff = 0;
         this.damageBuff = 0;
         this.rangeBuff = 0;
+        this.placing = true;
     }
     attack(enemy) {
+        
         if (this.cooldown > 0) {
             return enemy.health;
         } else {
             return enemy.health - (this.damage * this.damageBuff); 
+        }
+    }
+    place() {
+        if (this.placing) {
+            this.placing = false;
         }
     }
 }
