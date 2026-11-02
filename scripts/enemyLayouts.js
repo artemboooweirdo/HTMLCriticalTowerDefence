@@ -4,7 +4,7 @@ import maps from "./mapTemplates.js"; // Imports map templates
 import waveTimer from "./waveTimerClass.js" // Imports the wave timer class
 
 const enemyLayouts = {
-  normalEnemies: [
+  normalEnemies: { enemies: [
     new Enemy(templates.dummy, maps.map1, [1, 0]),
     new Enemy(templates.dummy, maps.map1, [1, 1]),
     new Enemy(templates.dummy, maps.map1, [1, 2]),
@@ -78,24 +78,8 @@ const enemyLayouts = {
     new Enemy(templates.rusher, maps.map1, [9, 10]),
     new Enemy(templates.rusher, maps.map1, [9, 11]),
     new Enemy(templates.rusher, maps.map1, [9, 12]),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ],
-  roundTime: [
+  roundTimes: [
     new waveTimer(10), // Wave 0
     new waveTimer(35), // Wave 1
     new waveTimer(35), //   |
@@ -106,9 +90,6 @@ const enemyLayouts = {
     new waveTimer(35), //   |
     new waveTimer(35), //   |
     new waveTimer(35), // Wave 9
-
-
-
-  ]
+  ]}
 };
 export default enemyLayouts;

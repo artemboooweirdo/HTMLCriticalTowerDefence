@@ -47,15 +47,15 @@ button {
   margin: 10px;
   width: 8vw;
   height: 8vh;
-  bottom: 0;
-  left: 0;
+  bottom: 46vh;
+  left: 36vw;
   visibility: visible;
 }
-#placeTower {
+/* #placeTower {
   position: fixed;
   margin: 10px;
   width: 8vw;
   height: 8vh;
   top: 0;
   right: 20vw;
-}
+} */
