@@ -1,7 +1,11 @@
 'use strict';
 
 const bgImage = new Image();
-bgImage.src = "./assets/images/Grassland.png";
+bgImage.src = "./assets/images/bg/Grassland.png";
+
+const dummySprite = new Image();
+dummySprite.src = "./assets/images/sprites/dummy.png"
+import Enemy from "./enemyClass.js";
 
 
 
@@ -11,18 +15,36 @@ export default class Game {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.map = map;
+
     this.round = 0;
     this.timeleft = 0;
+
     this.queuedEnemies = [];
     this.roundTimes = [];
     this.currentEnemies = [];
+
+    this.selectedTower = null;
     this.towers = [];
+
+    this.projectiles = [];
+
     this.baseHp = 100;
-    this.state = "ready";
+
     this.lastTime = null;
     this.deltaTime = null;
+
     this.bgImage = backgroundImage;
-    
+
+    this.cursorPos = { x: 0, y: 0 };
+
+    this.money = 0;
+
+    this.xOffset = 0;
+    this.yOffset = 0;
+    this.zoom = 1;
+    this.dxOffset = 0;
+    this.dyOffset = 0;
+
   }
   update(timestamp) {
 
@@ -31,6 +53,11 @@ export default class Game {
   }
   this.deltaTime = timestamp - this.lastTime;
   this.lastTime = timestamp;
+
+
+  // Calculate the camera offset
+  this.xOffset += this.dxOffset * (1000/60);
+  this.yOffset += this.dyOffset * (1000/60);
 
 
   // Timer stuff like starting new rounds
@@ -51,6 +78,30 @@ export default class Game {
     }
   }
   // Timer stuff
+
+  //Handles Enemy Damage 
+
+  this.towers.forEach((tower) => {
+    const attackableEnemies = this.currentEnemies.filter((enemy) => tower.isInRange(enemy));
+    if (attackableEnemies.length > 0) {
+      let targetEnemy;
+      switch (tower.targeting) {
+        case "first":
+          break;
+        case "last":
+          break;
+        case "strongest":
+          break;
+        case "weakest":
+          break;
+        default:
+          targetEnemy = attackableEnemies[0];
+      }
+      tower.attack(targetEnemy, this.deltaTime);
+    }
+  });
+
+
 
 
     // Handles death of enemies
@@ -97,15 +148,18 @@ export default class Game {
 
       // 1. Clear the canvas from previous frame #IMPORTANT
     // can improve this probably
+
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     // Draw the map background image
-    this.ctx.drawImage(this.bgImage, 0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.drawImage(this.bgImage, 0 + this.xOffset, 0 + this.yOffset, this.canvas.width, this.canvas.height);
+
     // Draws each enemy and their hp
     this.currentEnemies.forEach((enemy) => {
       this.ctx.fillStyle = enemy.type;
       this.ctx.fillRect(
-        enemy.xPos - 20,
-        enemy.yPos - 20,
+        enemy.xPos - 20 + this.xOffset,
+        enemy.yPos - 20 + this.yOffset,
         40,
         40,
       );
@@ -113,19 +167,39 @@ export default class Game {
       this.ctx.lineWidth = 1;
       this.ctx.strokeText(
       enemy.health,
-      enemy.xPos - 10,
-      enemy.yPos - 10,
+      enemy.xPos - 10 + this.xOffset,
+      enemy.yPos - 10 + this.yOffset,
       );
       this.ctx.fillStyle = "#0000ff";
       this.ctx.fillText(
       enemy.health,
-      enemy.xPos - 10,
-      enemy.yPos - 10,
+      enemy.xPos - 10 + this.xOffset,
+      enemy.yPos - 10 + this.yOffset,
       );
     });
 
+    //Draw Towers
+    this.towers.forEach((tower) => {
+      this.ctx.fillStyle = "#000000";
+      this.ctx.fillRect(
+        tower.xPos - 40 + this.xOffset,
+        tower.yPos - 40 + this.yOffset,
+        80,
+        80,
+      );
+    });
 
-    
+    //Draw Selected Tower
+    if (this.selectedTower) {
+      this.ctx.fillStyle = "#000000";
+      this.ctx.fillRect(
+        this.cursorPos.x - 40,
+        this.cursorPos.y - 40,
+        80,
+        80,
+      );
+    }
+
     // Draw HP Bar
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(298, 0, 404, 40);
@@ -159,5 +233,19 @@ export default class Game {
         this.currentEnemies.push(enemy);
       }, enemy.sendTime * 1000);
     });
+  }
+  placingTowerStart(tower) {
+    this.selectedTower = tower;
+  }
+  placingTowerCancel() {
+    this.selectedTower = null;
+  }
+  placingTowerEnd() {
+    if (this.selectedTower) {
+      this.selectedTower.xPos = this.cursorPos.x - this.xOffset;
+      this.selectedTower.yPos = this.cursorPos.y - this.yOffset;
+      this.towers.push(this.selectedTower);
+      this.selectedTower = null;
+    }
   }
 }

@@ -5,7 +5,8 @@ import Enemy from "./enemyClass.js"; //Imports the enemy class
 import templates from "./enemyTemplates.js";
 import maps from "./mapTemplates.js";
 import enemyLayouts from "./enemyLayouts.js";
-// import Tower from "./towerClass.js";
+import Tower from "./towerClass.js";
+import towerTemplates from "./towerTemplates.js"
 // import waveTimer from "./waveTimerClass.js";
 import Game from "./gameClass.js";
 // Load the UI font. It is called UIFont
@@ -39,17 +40,15 @@ const hpInput = document.getElementById("hpInput");
 const speedInput = document.getElementById("speedInput");
 const typeInput = document.getElementById("typeInput");
 const startButton = document.getElementById("startButton");
-// const towerButton = document.getElementById("placeTower");
+const towerButton = document.getElementById("placeTower");
 
 //Init the bg image
 const bgImage = new Image();
-bgImage.src = "./assets/images/Grassland.png";
+bgImage.src = "./assets/images/bg/Grassland.png";
 
 // Rounds and other misc
 let currentGame = null;
 const canvas = document.getElementById("gameCanvas");
-let canvasX = 0;
-let canvasY = 0;
 let placingTower = false;
 
 // Main Game Loop
@@ -61,9 +60,10 @@ function gameLoop(timestamp) {
     currentGame.baseHp = 0;
     currentGame.draw(); // Draw the final state of the game before reloading
     window.alert("Game Over! You ran out of HP. The page will now reload.");
-    location.reload()
+    location.reload();
     return; // Stop the game loop if the game is over
   }
+  
   currentGame.draw();
   // Request next frame (approx. 60 FPS)
   requestAnimationFrame(gameLoop);
@@ -113,9 +113,20 @@ startButton.addEventListener("click", () => {
 
   requestAnimationFrame(gameLoop);
 });
-// towerButton.addEventListener("click", () => {
-//   console.log("Tower button clicked");
-// });
+towerButton.addEventListener("click", () => {
+  console.log("Tower button clicked");
+  if (!currentGame) {
+    console.log("Game not started. Click 'Start Game' first.");
+    return;
+  }
+  if (currentGame.selectedTower) {
+    currentGame.placingTowerCancel();
+    console.log("Tower placement canceled");
+  } else {
+    currentGame.placingTowerStart(new Tower(towerTemplates.blaster));
+    console.log("Tower placement started");
+  }
+});
 
 // Checks if the dropdown menu is on custom FULLY WORKS
 spawnInput.addEventListener("change", () => {
@@ -128,21 +139,39 @@ spawnInput.addEventListener("change", () => {
 
 // FULLY WORKS (returns the x and y based on the canvas)
 canvas.addEventListener("mousemove", (e) => {
+  if (!currentGame) {
+    console.log("Game not started. Click 'Start Game' first.");
+    return;
+  }
   const rect = canvas.getBoundingClientRect();
   // 2. Calculate the mouse position relative to the canvas element (in CSS pixels)
   const cssX = e.offsetX - rect.left;
   const cssY = e.offsetY - rect.top;
   // 3. Scale the CSS coordinates to match the internal canvas resolution
-  canvasX = Math.round((cssX / rect.width) * canvas.width);
-  canvasY = Math.round((cssY / rect.height) * canvas.height);
+  currentGame.cursorPos.x = Math.round((cssX / rect.width) * canvas.width);
+  currentGame.cursorPos.y = Math.round((cssY / rect.height) * canvas.height);
 });
+
 canvas.addEventListener("click", (e) => {
-
-  // Later work
-
-  if (placingTower) {
-    // console.log(`Placing tower at (${canvasX}, ${canvasY})`);
-    // Implement tower placement logic here
-    placingTower = false; // Reset after placing
+  if (!currentGame) {
+    console.log("Game not started. Click 'Start Game' first.");
+    return;
   }
+  currentGame.placingTowerEnd();
 });
+
+document.addEventListener("keydown" , (e) => {
+  if (!currentGame) return;
+  if (e.key == "w") currentGame.dyOffset = 1;
+  if (e.key == "s") currentGame.dyOffset = -1;
+  if (e.key == "a") currentGame.dxOffset = 1;
+  if (e.key == "d") currentGame.dxOffset = -1;
+  console.log(e.key)
+})
+
+document.addEventListener("keyup", (e) => {
+  if (e.key == "w") currentGame.dyOffset = 0;
+  if (e.key == "s") currentGame.dyOffset = 0;
+  if (e.key == "a") currentGame.dxOffset = 0;
+  if (e.key == "d") currentGame.dxOffset = 0;
+})

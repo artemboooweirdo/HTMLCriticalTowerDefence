@@ -19,6 +19,7 @@ export default class Enemy {
     
     // Overshoot in the map (genuine pain)
     this.overshoot = 0;
+    this.distanceRemaining = 0;
 
     // Deploy times (do later when making the actual game)
     this.round = deploy[0];
@@ -29,6 +30,15 @@ export default class Enemy {
     this.speed = template.speed;
     this.type = template.type;
     this.id = 0;
+
+    // Effects on the enemies eg shatter and sinking
+    this.shatter = 0;
+    this.sinking = 0;
+
+    // ARTS idk what this stands for
+    this.energyARTS = 0;
+    this.magicARTS = 0;
+    this.physicalARTS = 0;
   }
 
   // 100 lines of code to NOT review :D
@@ -40,7 +50,7 @@ export default class Enemy {
 
       // Calculates distance remaining
 
-      let distanceRemaining = Math.hypot(
+      this.distanceRemaining = Math.hypot(
         this.targetLocation.x - this.xPos,
         this.targetLocation.y - this.yPos,
       );
@@ -52,10 +62,10 @@ export default class Enemy {
       }
 
       // Checks if the overshoot lands in a specific segment of the map
-      if (distanceRemaining >= this.overshoot) {
+      if (this.distanceRemaining >= this.overshoot) {
 
         // If the overshoot isnt large enough subtract overshoot from distance remaining and do calculations
-        distanceRemaining -= this.overshoot;
+        this.distanceRemaining -= this.overshoot;
 
         // MOVE TO OVERSHOOT
 
@@ -73,13 +83,13 @@ export default class Enemy {
         const unitVectorY = Number.isNaN(yComponent / magnitude)
           ? 0
           : yComponent / magnitude;
-        this.xPos = this.targetLocation.x - unitVectorX * distanceRemaining;
-        this.yPos = this.targetLocation.y - unitVectorY * distanceRemaining;
+        this.xPos = this.targetLocation.x - unitVectorX * this.distanceRemaining;
+        this.yPos = this.targetLocation.y - unitVectorY * this.distanceRemaining;
         // move
         this.overshoot = 0;
         break;
-      } else if (distanceRemaining < this.overshoot) {
-        this.overshoot -= distanceRemaining;
+      } else if (this.distanceRemaining < this.overshoot) {
+        this.overshoot -= this.distanceRemaining;
         this.targetIndex++;
         this.targetLocation = this.map.pathCoords[this.targetIndex] ?? this.map.finish;
       }

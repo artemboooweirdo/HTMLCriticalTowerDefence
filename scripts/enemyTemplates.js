@@ -1,5 +1,6 @@
 const templates = {
   dummy: {
+    name: "dummy", 
     health: 4,
     speed: 1,
     type: "#424451",
@@ -7,6 +8,7 @@ const templates = {
     isHidden: false,
   },
   speedy: {
+    name: "speedy",
     health: 3,
     speed: 2,
     type: "#024487",
@@ -14,6 +16,7 @@ const templates = {
     isHidden: false,
   },
   slow: {
+    name: "slow",
     health: 20,
     speed: 0.5,
     type: "#514C50",
@@ -23,6 +26,7 @@ const templates = {
     isHidden: false,
   },
   rusher: {
+    name: "rusher",
     health: 17,
     speed: 3,
     type: "#050609",
@@ -30,6 +34,7 @@ const templates = {
     isHidden: false,
   },
   dummyBoss: {
+    name: "dummyBoss",
     health: 120,
     speed: 1,
     type: "#770000",
@@ -37,6 +42,7 @@ const templates = {
     isHidden: false,
   },
   transparentDummy: {
+    name: "transparentDummy",
     health: 10,
     speed: 2,
     type: "#424451b4",
@@ -44,13 +50,15 @@ const templates = {
     isHidden: true,
   },
   tough: {
+    name: "tough",
     health: 50,
     speed: 0.5,
     type: "#2d2e34",
     resistance: 0,
     isHidden: false,
   },
-  dummyMancer: {
+  dummymancer: {
+    name: "dummymancer",
     health: 300,
     speed: 0.4,
     type: "#101014",
@@ -58,6 +66,7 @@ const templates = {
     isHidden: false,
   },
   slowBoss: {
+    name: "slowBoss",
     health: 1000,
     speed: 0.1,
     type: "#000000",
@@ -65,6 +74,7 @@ const templates = {
     isHidden: false,
   },
   transparentBoss: {
+    name: "transparentBoss",
     health: 600,
     speed: 1,
     type: "#424451b4",
@@ -72,6 +82,7 @@ const templates = {
     isHidden: true,
   },
   eliteRusher: {
+    name: "eliteRusher",
     health: 90,
     speed: 4,
     type: "#aaaa00",
@@ -79,6 +90,7 @@ const templates = {
     isHidden: false,
   },
   speedyBoss: {
+    name: "speedyBoss",
     health: 700,
     speed: 5,
     type: "#0000dd",
@@ -86,6 +98,7 @@ const templates = {
     isHidden: false,
   },
   toughBoss: {
+    name: "toughBoss",
     health: 2500,
     speed: 0.5,
     type: "#122f23",
@@ -93,6 +106,7 @@ const templates = {
     isHidden: false,
   },
   bigDummy: {
+    name: "bigDummy",
     health: 11750,
     speed: 0.2,
     type: "#bbbbbb",
