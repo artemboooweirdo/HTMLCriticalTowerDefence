@@ -145,11 +145,11 @@ canvas.addEventListener("mousemove", (e) => {
   }
   const rect = canvas.getBoundingClientRect();
   // 2. Calculate the mouse position relative to the canvas element (in CSS pixels)
-  const cssX = e.offsetX - rect.left;
-  const cssY = e.offsetY - rect.top;
+  const cssX = e.clientX - rect.left;
+  const cssY = e.clientY - rect.top;
   // 3. Scale the CSS coordinates to match the internal canvas resolution
-  currentGame.cursorPos.x = Math.round((cssX / rect.width) * canvas.width);
-  currentGame.cursorPos.y = Math.round((cssY / rect.height) * canvas.height);
+  currentGame.cursorPos.x = Math.round((cssX / rect.width) * canvas.width) / currentGame.zoom;
+  currentGame.cursorPos.y = Math.round((cssY / rect.height) * canvas.height) / currentGame.zoom;
 });
 
 canvas.addEventListener("click", (e) => {
@@ -166,7 +166,25 @@ document.addEventListener("keydown" , (e) => {
   if (e.key == "s") currentGame.dyOffset = -1;
   if (e.key == "a") currentGame.dxOffset = 1;
   if (e.key == "d") currentGame.dxOffset = -1;
-  console.log(e.key)
+  if (e.key == "-") {
+    if (currentGame.zoom > 0.5) {
+      currentGame.zoom =  Math.round((currentGame.zoom - 0.1) * 10) / 10; // Round to one decimal place
+    } else {
+      currentGame.zoom = 0.5;
+    }
+    currentGame.alert = `Zoom: ${currentGame.zoom}x`;
+    currentGame.alertAlpha = 1;
+  };
+  if (e.key == "=") {
+    if (currentGame.zoom < 2) {
+      currentGame.zoom =  Math.round((currentGame.zoom + 0.1) * 10) / 10; // Round to one decimal place
+    } else {
+      currentGame.zoom = 2;
+    }
+    currentGame.alert = `Zoom: ${currentGame.zoom}x`;
+    currentGame.alertAlpha = 1;
+  };
+  console.log(e.key);
 })
 
 document.addEventListener("keyup", (e) => {
@@ -174,4 +192,5 @@ document.addEventListener("keyup", (e) => {
   if (e.key == "s") currentGame.dyOffset = 0;
   if (e.key == "a") currentGame.dxOffset = 0;
   if (e.key == "d") currentGame.dxOffset = 0;
+  if (e.key == "Escape") currentGame.placingTowerCancel();
 })

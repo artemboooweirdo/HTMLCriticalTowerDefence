@@ -6,7 +6,9 @@ bgImage.src = "./assets/images/bg/Grassland.png";
 const dummySprite = new Image();
 dummySprite.src = "./assets/images/sprites/dummy.png"
 import Enemy from "./enemyClass.js";
+import Projectile from "./projectileClass.js";
 
+let idCounter = 0;
 
 
 // IMPLEMENT THIS
@@ -45,6 +47,9 @@ export default class Game {
     this.dxOffset = 0;
     this.dyOffset = 0;
 
+    this.alert = "Welcome to the game!";
+    this.alertAlpha = 1;
+
   }
   update(timestamp) {
 
@@ -59,6 +64,13 @@ export default class Game {
   this.xOffset += this.dxOffset * (1000/60);
   this.yOffset += this.dyOffset * (1000/60);
 
+  // Update the alert
+  if (this.alert) {
+    this.alertAlpha -= 0.01;
+    if (this.alertAlpha <= 0) {
+      this.alert = null;
+    }
+  }
 
   // Timer stuff like starting new rounds
   const timer = this.roundTimes[this.round];
@@ -87,21 +99,47 @@ export default class Game {
       let targetEnemy;
       switch (tower.targeting) {
         case "first":
+          targetEnemy = attackableEnemies.reduce((first, enemy) => {
+            return enemy.totalDistance > first.totalDistance ? enemy : first;
+          });
           break;
         case "last":
+          targetEnemy = attackableEnemies.reduce((last, enemy) => {
+            return enemy.totalDistance < last.totalDistance ? enemy : last;
+          });
           break;
         case "strongest":
+          targetEnemy = attackableEnemies.reduce((strongest, enemy) => {
+            return enemy.health > strongest.health ? enemy : strongest;
+          });
           break;
         case "weakest":
+          targetEnemy = attackableEnemies.reduce((weakest, enemy) => {
+            return enemy.health < weakest.health ? enemy : weakest;
+          });
           break;
         default:
           targetEnemy = attackableEnemies[0];
       }
-      tower.attack(targetEnemy, this.deltaTime);
+      const targetEnemyHp = this.currentEnemies[this.currentEnemies.findIndex((enemy) => enemy.id === targetEnemy.id)].health;
+      const newHealth = tower.attack(targetEnemy, this.deltaTime);
+      if (newHealth < targetEnemyHp) {
+        console.log(`Tower attacked enemy ${targetEnemy.id} for ${targetEnemyHp - newHealth} damage`);
+        targetEnemy.health = newHealth;
+        this.projectiles.push(new Projectile({ speed: 0.5, type: "circle", radius: 5 }, tower, targetEnemy));
+      }
+      
     }
   });
 
-
+  this.projectiles.forEach((projectile, index) => {
+    projectile.update(this.deltaTime);
+    if (Math.sqrt((projectile.targetEnemy.xPos - projectile.xPos) ** 2 + (projectile.targetEnemy.yPos - projectile.yPos) ** 2) <= 5) {
+      console.log(`Projectile hit enemy ${projectile.targetEnemy.id}`);
+      this.projectiles.splice(index, 1);
+    }
+  });
+      
 
 
     // Handles death of enemies
@@ -143,32 +181,30 @@ export default class Game {
 
 
   }
-  draw() {
-
-
-      // 1. Clear the canvas from previous frame #IMPORTANT
-    // can improve this probably
-
+  clearCanvas() {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Draw the map background image
+    this.ctx.scale(this.zoom, this.zoom);
+  }
+  drawBGImage() {
     this.ctx.drawImage(this.bgImage, 0 + this.xOffset, 0 + this.yOffset, this.canvas.width, this.canvas.height);
-
-    // Draws each enemy and their hp
+  }
+  drawEnemies() { 
     this.currentEnemies.forEach((enemy) => {
       this.ctx.fillStyle = enemy.type;
       this.ctx.fillRect(
-        enemy.xPos - 20 + this.xOffset,
-        enemy.yPos - 20 + this.yOffset,
+        enemy.xPos - 20  + this.xOffset,
+        enemy.yPos - 20  + this.yOffset,
         40,
         40,
       );
-      this.ctx.font = "15px UIFont";
+      this.ctx.font = `${15}px UIFont`;
       this.ctx.lineWidth = 1;
       this.ctx.strokeText(
       enemy.health,
-      enemy.xPos - 10 + this.xOffset,
-      enemy.yPos - 10 + this.yOffset,
+      enemy.xPos - 10  + this.xOffset,
+      enemy.yPos - 10  + this.yOffset,
       );
       this.ctx.fillStyle = "#0000ff";
       this.ctx.fillText(
@@ -177,36 +213,67 @@ export default class Game {
       enemy.yPos - 10 + this.yOffset,
       );
     });
-
-    //Draw Towers
+  }
+  drawPlacedTowers() {
     this.towers.forEach((tower) => {
       this.ctx.fillStyle = "#000000";
       this.ctx.fillRect(
-        tower.xPos - 40 + this.xOffset,
-        tower.yPos - 40 + this.yOffset,
-        80,
-        80,
+        tower.xPos - 10 + this.xOffset,
+        tower.yPos - 10 + this.yOffset,
+        20,
+        20,
       );
+      this.ctx.beginPath();
+      this.ctx.arc(
+        tower.xPos + this.xOffset,
+        tower.yPos + this.yOffset,
+        (tower.range + (tower.range * tower.rangeBuff / 100)),
+        0,
+        2 * Math.PI,
+      );
+      this.ctx.strokeStyle = "#000000";
+      this.ctx.lineWidth = 2;
+      this.ctx.stroke();
+      this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
+      this.ctx.fill();
     });
-
+  }
+  drawSelectedTower() { 
     //Draw Selected Tower
     if (this.selectedTower) {
       this.ctx.fillStyle = "#000000";
       this.ctx.fillRect(
-        this.cursorPos.x - 40,
-        this.cursorPos.y - 40,
-        80,
-        80,
+        this.cursorPos.x - 10,
+        this.cursorPos.y - 10,
+        20,
+        20,
       );
     }
-
-    // Draw HP Bar
+    // And its range
+    if (this.selectedTower) {
+      this.ctx.beginPath();
+      this.ctx.arc(
+        this.cursorPos.x,
+        this.cursorPos.y,
+        (this.selectedTower.range + this.selectedTower.range * this.selectedTower.rangeBuff / 100),
+        0,
+        2 * Math.PI,
+      );
+      this.ctx.strokeStyle = "#000000";
+      this.ctx.lineWidth = 2;
+      this.ctx.stroke();
+      this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
+      this.ctx.fill();
+    }
+  }
+  drawHpBar() { 
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(298, 0, 404, 40);
     this.ctx.fillStyle = "#00ff00"
     this.ctx.strokeStyle = "#000000";
     this.ctx.fillRect(300, 2, this.baseHp * 4, 36);
-
+  }
+  drawMiscText() {
     // Draw HP Left
     this.ctx.font = "40px UIFont";
     this.ctx.textAlign = "left";
@@ -219,8 +286,70 @@ export default class Game {
     this.ctx.fillStyle = "#000000"
     const timer = this.roundTimes[this.round];
     const timeLeft = timer ? timer.getTime().toFixed(0) : "You Win!";
-    this.ctx.fillText(`Time left: ${timeLeft}`, 300, 40);
+    this.ctx.fillText(`Time left: ${timeLeft}`, 300, 40); 
   }
+  drawProjectiles() {
+    this.projectiles.forEach((projectile) => {
+
+      //Saves the current state of the canvas
+      this.ctx.save();
+      this.ctx.translate(projectile.xPos + this.xOffset, projectile.yPos + this.yOffset);
+      this.ctx.rotate(projectile.rotation);
+
+      if (projectile.type === "rect") {
+        this.ctx.fillStyle = "#ff0000";
+        this.ctx.fillRect(-projectile.width / 2, -projectile.height / 2, projectile.width / 2, projectile.height / 2);
+      } else if (projectile.type === "circle") {
+        this.ctx.fillStyle = "#ff0000";
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, projectile.radius, 0, 2 * Math.PI);
+        this.ctx.fill();
+      }
+      this.ctx.restore();
+    });
+  }
+  drawAlert() {
+    if (this.alert) {
+      this.ctx.font = "50px UIFont";
+      this.ctx.fillStyle = `rgba(0, 0, 0, ${this.alertAlpha})`;
+      this.ctx.fillText(this.alert, 0, 670);
+    }
+  }
+  draw() {
+    // Draw the map background image
+
+    this.clearCanvas();
+
+    this.drawBGImage();
+
+    // Draws each enemy and their hp
+    this.drawEnemies();
+
+    //Draw Towers
+    this.drawPlacedTowers();
+
+    //Draw the projectiles
+    this.drawProjectiles();
+
+    // Draw the selected tower and its range
+    this.drawSelectedTower();
+
+
+    //Make these scaled normally
+
+    this.ctx.scale(1 / this.zoom, 1 / this.zoom);
+
+    // Draw HP Bar
+    this.drawHpBar();
+
+    // Draw Misc Text
+    this.drawMiscText();
+
+    // Draw Alert
+    this.drawAlert();
+    
+  }
+
   queueEnemies(enemies) {
     this.queuedEnemies.push(...enemies.enemies);
     this.roundTimes.push(...enemies.roundTimes);
@@ -230,6 +359,7 @@ export default class Game {
     const roundEnemies = this.queuedEnemies.filter(enemy => enemy.round === round);
     roundEnemies.forEach((enemy) => {
       setTimeout(() => {
+        enemy.id = idCounter++;
         this.currentEnemies.push(enemy);
       }, enemy.sendTime * 1000);
     });
@@ -247,5 +377,9 @@ export default class Game {
       this.towers.push(this.selectedTower);
       this.selectedTower = null;
     }
+  }
+  alert(message) {
+    this.alert = message;
+
   }
 }

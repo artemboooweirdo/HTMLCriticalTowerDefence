@@ -6,7 +6,7 @@ export default class Tower {
         this.yPos = yPos;
         this.damage = template.damage;
         this.atkSpd = template.atkSpd;
-        this.range = template.range;
+        this.range = template.range * 10;
         this.type = template.type;
         this.name = template.name;
         this.atkSpdBuff = 0;
@@ -20,7 +20,7 @@ export default class Tower {
             return enemy.health;
         } else {
             // cooldown = atkspd (cd) - 1 / (1/atkspd (atk/sec) * 1 + (this.atkSpdBuff / 100) (buff in percent))
-            this.cooldown = this.atkSpd - (1 / ((1 / this.atkSpd) * (1 + (this.atkSpdBuff / 100))));
+            this.cooldown = (this.atkSpd * 1000) / (1 + this.atkSpdBuff / 100);
             return enemy.health - (this.damage + (this.damage * this.damageBuff / 100)); 
         }
     }

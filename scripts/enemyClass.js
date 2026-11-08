@@ -21,6 +21,9 @@ export default class Enemy {
     this.overshoot = 0;
     this.distanceRemaining = 0;
 
+    //Targeting variable for first and last targeting
+    this.totalDistance = 0;
+
     // Deploy times (do later when making the actual game)
     this.round = deploy[0];
     this.sendTime = deploy[1];
@@ -66,7 +69,7 @@ export default class Enemy {
 
         // If the overshoot isnt large enough subtract overshoot from distance remaining and do calculations
         this.distanceRemaining -= this.overshoot;
-
+        this.totalDistance += this.overshoot;
         // MOVE TO OVERSHOOT
 
         // Get old target location, if it dosent exist e.g. this.map.pathCoords[-1], then return the start
@@ -85,10 +88,11 @@ export default class Enemy {
           : yComponent / magnitude;
         this.xPos = this.targetLocation.x - unitVectorX * this.distanceRemaining;
         this.yPos = this.targetLocation.y - unitVectorY * this.distanceRemaining;
-        // move
+
         this.overshoot = 0;
         break;
       } else if (this.distanceRemaining < this.overshoot) {
+        this.totalDistance += this.distanceRemaining;
         this.overshoot -= this.distanceRemaining;
         this.targetIndex++;
         this.targetLocation = this.map.pathCoords[this.targetIndex] ?? this.map.finish;
@@ -118,6 +122,7 @@ export default class Enemy {
     //the variables to return
     let newX = deltaX + this.xPos;
     let newY = deltaY + this.yPos;
+    this.totalDistance += Math.hypot(deltaX, deltaY);
     let overshootX = 0;
     let overshootY = 0;
     if (
