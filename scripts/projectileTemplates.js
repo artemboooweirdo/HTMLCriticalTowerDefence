@@ -1,15 +1,15 @@
 const projectileTemplates = {
-  "arrow": {
+  arrow: {
     name: "Arrow",
     speed: 10,
     type: "rect",
     size: { width: 5, height: 2 },
   },
-   "bullet": {
+   bullet: {
     name: "Bullet",
-    speed: 20,
+    speed: 2,
     type: "circle",
-    radius: 3,
+    radius: 6,
    }
 }
 

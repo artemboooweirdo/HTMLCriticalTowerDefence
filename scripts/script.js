@@ -33,23 +33,17 @@ async function loadCustomFont() {
 loadCustomFont();
 
 // spawnButton and the spawnInput dorpdown menu (I realized i misspelled dropdown)
-const spawnButton = document.getElementById("spawnButton");
-const spawnInput = document.getElementById("spawnInput");
-const customInputs = document.getElementById("customStats");
-const hpInput = document.getElementById("hpInput");
-const speedInput = document.getElementById("speedInput");
-const typeInput = document.getElementById("typeInput");
 const startButton = document.getElementById("startButton");
 const towerButton = document.getElementById("placeTower");
+const glowSelector = document.getElementById("glowSelector");
 
 //Init the bg image
 const bgImage = new Image();
-bgImage.src = "./assets/images/bg/Grassland.png";
+bgImage.src = "./assets/images/bg/SpookyGrassland.png";
 
 // Rounds and other misc
 let currentGame = null;
 const canvas = document.getElementById("gameCanvas");
-let placingTower = false;
 
 // Main Game Loop
 function gameLoop(timestamp) {
@@ -73,30 +67,6 @@ function gameLoop(timestamp) {
 
 
 // Spawn button FULLY WORKS
-spawnButton.addEventListener("click", () => {
-  if (!currentGame) {
-    console.log("Game not started. Click 'Start Game' first.");
-    return;
-  }
-  const selectedEnemy = spawnInput.value;
-  console.log(`Spawning ${selectedEnemy}`);
-  if (selectedEnemy == "custom") {
-    if (speedInput.value == 0) {
-      throw new Error("Enemy cant have a speed of 0!");
-    }
-    const newEnemy = new Enemy(
-      { health: hpInput.value, speed: speedInput.value, type: typeInput.value },
-      maps.map1,
-      [1, 0],
-    );
-    currentGame.currentEnemies.unshift(newEnemy);
-  } else if (templates[selectedEnemy]) {
-    const newEnemy = new Enemy(templates[selectedEnemy], maps.map1, [1, 0]);
-    currentGame.currentEnemies.unshift(newEnemy);
-  } else {
-    console.log(`Invalid enemy type: ${selectedEnemy}`);
-  }
-});
 
 startButton.addEventListener("click", () => {
   // test
@@ -125,15 +95,6 @@ towerButton.addEventListener("click", () => {
   } else {
     currentGame.placingTowerStart(new Tower(towerTemplates.blaster));
     console.log("Tower placement started");
-  }
-});
-
-// Checks if the dropdown menu is on custom FULLY WORKS
-spawnInput.addEventListener("change", () => {
-  if (spawnInput.value == "custom") {
-    customInputs.style.visibility = "visible";
-  } else {
-    customInputs.style.visibility = "hidden";
   }
 });
 
@@ -194,3 +155,10 @@ document.addEventListener("keyup", (e) => {
   if (e.key == "d") currentGame.dxOffset = 0;
   if (e.key == "Escape") currentGame.placingTowerCancel();
 })
+glowSelector.addEventListener("change", (e) => {
+  if (!currentGame) {
+    window.alert("Game not started. Click 'Start Game' first.");
+    return;
+  } else {
+    currentGame.glow = e.target.value;
+  }});

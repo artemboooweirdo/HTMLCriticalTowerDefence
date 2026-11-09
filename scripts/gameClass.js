@@ -1,12 +1,11 @@
 'use strict';
 
-const bgImage = new Image();
-bgImage.src = "./assets/images/bg/Grassland.png";
 
 const dummySprite = new Image();
 dummySprite.src = "./assets/images/sprites/dummy.png"
 import Enemy from "./enemyClass.js";
 import Projectile from "./projectileClass.js";
+import projectileTemplates from "./projectileTemplates.js";
 
 let idCounter = 0;
 
@@ -49,6 +48,8 @@ export default class Game {
 
     this.alert = "Welcome to the game!";
     this.alertAlpha = 1;
+
+    this.glow = "#ff0000";
 
   }
   update(timestamp) {
@@ -126,19 +127,15 @@ export default class Game {
       if (newHealth < targetEnemyHp) {
         console.log(`Tower attacked enemy ${targetEnemy.id} for ${targetEnemyHp - newHealth} damage`);
         targetEnemy.health = newHealth;
-        this.projectiles.push(new Projectile({ speed: 0.5, type: "circle", radius: 5 }, tower, targetEnemy));
+        this.projectiles.push(new Projectile(projectileTemplates.bullet, tower, targetEnemy));
       }
       
     }
   });
 
-  this.projectiles.forEach((projectile, index) => {
+  this.projectiles.forEach((projectile) => {
     projectile.update(this.deltaTime);
-    if (Math.sqrt((projectile.targetEnemy.xPos - projectile.xPos) ** 2 + (projectile.targetEnemy.yPos - projectile.yPos) ** 2) <= 5) {
-      console.log(`Projectile hit enemy ${projectile.targetEnemy.id}`);
-      this.projectiles.splice(index, 1);
-    }
-  });
+    });
       
 
 
@@ -223,19 +220,14 @@ export default class Game {
         20,
         20,
       );
-      this.ctx.beginPath();
-      this.ctx.arc(
-        tower.xPos + this.xOffset,
-        tower.yPos + this.yOffset,
-        (tower.range + (tower.range * tower.rangeBuff / 100)),
-        0,
-        2 * Math.PI,
-      );
-      this.ctx.strokeStyle = "#000000";
+      this.ctx.strokeStyle = "#ffffff";
       this.ctx.lineWidth = 2;
-      this.ctx.stroke();
-      this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
-      this.ctx.fill();
+      this.ctx.strokeRect(
+        tower.xPos - 10 + this.xOffset,
+        tower.yPos - 10 + this.yOffset,
+        20,
+        20,
+      );
     });
   }
   drawSelectedTower() { 
@@ -286,9 +278,18 @@ export default class Game {
     this.ctx.fillStyle = "#000000"
     const timer = this.roundTimes[this.round];
     const timeLeft = timer ? timer.getTime().toFixed(0) : "You Win!";
+    if (timeLeft == "You Win!") {
+      this.alert = "You Win!";
+    }
     this.ctx.fillText(`Time left: ${timeLeft}`, 300, 40); 
   }
   drawProjectiles() {
+    // Removing projectiles here so that i dont have to use foreach
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      if (this.projectiles[i].removal) {
+        this.projectiles.splice(i, 1);
+      }
+    }
     this.projectiles.forEach((projectile) => {
 
       //Saves the current state of the canvas
@@ -297,10 +298,10 @@ export default class Game {
       this.ctx.rotate(projectile.rotation);
 
       if (projectile.type === "rect") {
-        this.ctx.fillStyle = "#ff0000";
+        this.ctx.fillStyle = this.glow;
         this.ctx.fillRect(-projectile.width / 2, -projectile.height / 2, projectile.width / 2, projectile.height / 2);
       } else if (projectile.type === "circle") {
-        this.ctx.fillStyle = "#ff0000";
+        this.ctx.fillStyle = this.glow;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, projectile.radius, 0, 2 * Math.PI);
         this.ctx.fill();
@@ -327,6 +328,26 @@ export default class Game {
 
     //Draw Towers
     this.drawPlacedTowers();
+
+    //Draw hovered tower range
+    this.towers.forEach((tower) => {
+      if (Math.hypot(this.cursorPos.x - tower.xPos - this.xOffset, this.cursorPos.y - tower.yPos - this.yOffset) <= 20) {
+
+      this.ctx.beginPath();
+      this.ctx.arc(
+        tower.xPos + this.xOffset,
+        tower.yPos + this.yOffset,
+        (tower.range + tower.range * tower.rangeBuff / 100),
+        0,
+        2 * Math.PI,
+      );
+      this.ctx.strokeStyle = "#000000";
+      this.ctx.lineWidth = 2;
+      this.ctx.stroke();
+      this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
+      this.ctx.fill();
+    }
+    });
 
     //Draw the projectiles
     this.drawProjectiles();

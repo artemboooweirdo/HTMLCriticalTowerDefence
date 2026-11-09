@@ -5,7 +5,7 @@ export default class Projectile {
         this.targetEnemy = targetEnemy;
         this.targetX = targetEnemy.xPos;
         this.targetY = targetEnemy.yPos;
-        this.distance = Math.hypot(this.targetX - this.xPos, this.targetY - this.yPos);
+        this.distanceLeft = Math.hypot(this.targetX - this.xPos, this.targetY - this.yPos);
         this.speed = template.speed;
         this.type = template.type;
         this.rotation = Math.atan2(this.targetY - this.yPos, this.targetX - this.xPos);
@@ -20,7 +20,15 @@ export default class Projectile {
         this.removal = false;
     }
     update(deltaTime) {
-        this.xPos += Math.cos(this.rotation) * this.speed * deltaTime;
-        this.yPos += Math.sin(this.rotation) * this.speed * deltaTime;
+        if (this.distanceLeft <= 0) {
+            this.removal = true;
+            return;
+        }
+        const dy = Math.sin(this.rotation) * this.speed * deltaTime
+        const dx = Math.cos(this.rotation) * this.speed * deltaTime
+        const distanceMoved = Math.hypot(dx, dy);
+        this.distanceLeft -= distanceMoved;
+        this.xPos += dx
+        this.yPos += dy
     }
 }

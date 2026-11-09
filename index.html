@@ -6,33 +6,23 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Welcome!</title>
+    <title>Start The TD!</title>
     <link rel="stylesheet" href="./styles/style.css" />
   </head>
   <body>
+    <!-- Buttons that are fixed positioning -->
     <button id="placeTower">Place a Blaster</button>
     <button id="startButton">Start</button>
+    <!---->
+    
     <div class="container">
-      <select id="spawnInput">
-        <option value="dummy">Dummy</option>
-        <option value="speedy">Speedy</option>
-        <option value="slow">Slow</option>
-        <option value="rusher">Rusher</option>
-        <option value="dummyBoss">Dummy Boss</option>
-        <option value="custom">Custom</option>
-      </select>
-      <button id="spawnButton" formnovalidate>Spawn</button>
-      <div id="customStats">
-        <input type="number" id="hpInput" placeholder="Health" required />
-        <input type="color" id="typeInput" placeholder="#000000" required />
-        <input
-          type="number"
-          id="speedInput"
-          placeholder="Speed (e.g. 0)"
-          required
-        />
-      </div>
       <canvas id="gameCanvas" height="720px" width="1200px"></canvas>
+      <div class="settingsContainer">
+        <p id="settingsTitle">Settings</p>
+        <p>Glow</p>
+        <p>\/</p>
+        <input type="color" id="glowSelector" name="favcolor" value="#ff0000">
+      </div>
     </div>
   </body>
   <!-- Eruda script goes first because it needs to load the console -->
