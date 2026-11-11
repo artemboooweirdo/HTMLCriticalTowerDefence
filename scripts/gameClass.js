@@ -51,6 +51,9 @@ export default class Game {
 
     this.glow = "#ff0000";
 
+    this.towerMenu = null;
+
+    this.gameState = "playing";
   }
   update(timestamp) {
 
@@ -98,6 +101,7 @@ export default class Game {
     const attackableEnemies = this.currentEnemies.filter((enemy) => tower.isInRange(enemy));
     if (attackableEnemies.length > 0) {
       let targetEnemy;
+      // Finds the target enemy based on its targeting
       switch (tower.targeting) {
         case "first":
           targetEnemy = attackableEnemies.reduce((first, enemy) => {
@@ -231,16 +235,6 @@ export default class Game {
     });
   }
   drawSelectedTower() { 
-    //Draw Selected Tower
-    if (this.selectedTower) {
-      this.ctx.fillStyle = "#000000";
-      this.ctx.fillRect(
-        this.cursorPos.x - 10,
-        this.cursorPos.y - 10,
-        20,
-        20,
-      );
-    }
     // And its range
     if (this.selectedTower) {
       this.ctx.beginPath();
@@ -256,6 +250,35 @@ export default class Game {
       this.ctx.stroke();
       this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
       this.ctx.fill();
+      // And its Size
+      this.ctx.fillStyle = "rgba(255, 40, 40, 0.64)";
+      this.ctx.fillRect(
+        this.cursorPos.x - this.selectedTower.placementSize * 50,
+        this.cursorPos.y - this.selectedTower.placementSize * 50,
+        this.selectedTower.placementSize * 100,
+        this.selectedTower.placementSize * 100,
+      );
+      // Draw all other sizes
+      this.ctx.fillStyle = "rgba(255, 40, 40, 0.64)";
+      this.towers.forEach((tower) => {
+        this.ctx.fillRect(
+          tower.xPos - tower.placementSize * 50 + this.xOffset,
+          tower.yPos - tower.placementSize * 50 + this.yOffset,
+          tower.placementSize * 100,
+          tower.placementSize * 100,
+        );
+      });
+
+      //Draw Selected Tower
+      if (this.selectedTower) {
+        this.ctx.fillStyle = "#000000";
+        this.ctx.fillRect(
+          this.cursorPos.x - 10,
+          this.cursorPos.y - 10,
+          20,
+          20,
+        );
+      }
     }
   }
   drawHpBar() { 
@@ -326,9 +349,6 @@ export default class Game {
     // Draws each enemy and their hp
     this.drawEnemies();
 
-    //Draw Towers
-    this.drawPlacedTowers();
-
     //Draw hovered tower range
     this.towers.forEach((tower) => {
       if (Math.hypot(this.cursorPos.x - tower.xPos - this.xOffset, this.cursorPos.y - tower.yPos - this.yOffset) <= 20) {
@@ -348,6 +368,9 @@ export default class Game {
       this.ctx.fill();
     }
     });
+    
+    //Draw Towers
+    this.drawPlacedTowers();
 
     //Draw the projectiles
     this.drawProjectiles();
@@ -401,6 +424,5 @@ export default class Game {
   }
   alert(message) {
     this.alert = message;
-
   }
 }
