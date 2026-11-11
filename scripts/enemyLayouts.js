@@ -9,7 +9,7 @@ const enemyLayouts = {
     new Enemy(templates.dummy, maps.map1, [1, 1]),
     new Enemy(templates.dummy, maps.map1, [1, 2]),
     new Enemy(templates.dummy, maps.map1, [1, 3]),
-    new Enemy(templates.dummy, maps.map1, [2, 0]),
+    new Enemy(templates.bigDummy, maps.map1, [2, 0]),
     new Enemy(templates.dummy, maps.map1, [2, 1]),
     new Enemy(templates.dummy, maps.map1, [2, 2]),
     new Enemy(templates.dummy, maps.map1, [2, 3]),

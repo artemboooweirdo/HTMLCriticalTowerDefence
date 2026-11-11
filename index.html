@@ -11,11 +11,16 @@
   </head>
   <body>
     <!-- Buttons that are fixed positioning -->
+    <div id="loadingScreen">
+      <div id="tipTitle">Tip<br></div>
+
+      <div id="tipText"><span>Elemental Towers deal less damage to enemies with resistance</span><br></div>
+      <div id="loadingText">Loading...</div>
+    </div>
     <button id="placeTower">Place a Blaster</button>
-    <button id="startButton">Start</button>
     <!---->
     
-    <div class="container">
+    <div id="gameContainer">
       <canvas id="gameCanvas" height="720px" width="1200px"></canvas>
       <div class="settingsContainer">
         <p id="settingsTitle">Settings</p>
@@ -24,6 +29,54 @@
         <input type="color" id="glowSelector" name="favcolor" value="#ff0000">
       </div>
     </div>
+    <div id="menuContainer">
+      <!-- This is the menu that is shown on startup -->
+
+      <div id="mainMenu">
+          <div id="towersButton">
+            Equipment
+          </div>
+          <div id="perksButton">
+            Perks
+          </div>
+          <div id="settingsButton">
+            Settings
+          </div>
+        <div id="playButton">Play</div>
+      </div>
+
+      <!-- Menu for tower Selection -->
+      <div id="towersMenu" inert>
+        <p>Towers</p>
+      </div>
+
+      <!-- Menu for perk Selection -->
+      <div id="perksMenu" inert>
+        <p>Perks</p>
+      </div>
+
+      <!-- Menu for settings -->
+      <!-- Such as tower colors and secrets -->
+      <div id="settingsMenu" inert>
+        <p>Settings</p>
+      </div>
+      <!-- Menu for game selection -->
+      <div id="gameMenu" inert>
+        <div id="grasslandButton">
+          Grassland
+        </div>
+        <div id="spookyGrasslandButton">
+          Spooky Grassland
+        </div>
+      </div>
+      <div id="backButton" inert>
+        &lt;
+      </div>
+    </div>
+
+
+
+
   </body>
   <!-- Eruda script goes first because it needs to load the console -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>

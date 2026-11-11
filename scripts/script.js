@@ -29,20 +29,41 @@ async function loadCustomFont() {
     console.error("Failed to load font:", error);
   }
 }
+
 // guess what this does lmao
 loadCustomFont();
 
 // spawnButton and the spawnInput dorpdown menu (I realized i misspelled dropdown)
-const startButton = document.getElementById("startButton");
+const playButton = document.getElementById("playButton");
+const towersButton = document.getElementById("towersButton");
+const perksButton = document.getElementById("perksButton");
+
+const backButton = document.getElementById("backButton");
+
+const settingsButton = document.getElementById("settingsButton");
+const menuContainer = document.getElementById("menuContainer");
+
+
+const perksMenu = document.getElementById("perksMenu");
+const towersMenu = document.getElementById("towersMenu");
+const settingsMenu = document.getElementById("settingsMenu");
+const gameMenu = document.getElementById("gameMenu");
 const towerButton = document.getElementById("placeTower");
 const glowSelector = document.getElementById("glowSelector");
+const grassland = document.getElementById("grasslandButton");
+const spookyGrassland = document.getElementById("spookyGrasslandButton");
+const mainMenu = document.getElementById("mainMenu");
+const gameContainer = document.getElementById("gameContainer");
+const gameCanvas = document.getElementById("gameCanvas");
+const loadingScreen = document.getElementById("loadingScreen");
 
-//Init the bg image
-const bgImage = new Image();
-bgImage.src = "./assets/images/bg/SpookyGrassland.png";
+
 
 // Rounds and other misc
+const equippedTowers = []; // Array to hold equipped towers
+const equippedPerks = []; // Array to hold equipped perks
 let currentGame = null;
+let currentMenu = "main"; // Possible values: "main", "towers", "perks", "settings"
 const canvas = document.getElementById("gameCanvas");
 
 // Main Game Loop
@@ -65,23 +86,63 @@ function gameLoop(timestamp) {
 
 // Other stuff such as event listeners and such
 
+// On page load, hide the loading screen after a short delay to ensure all assets are loaded
+window.addEventListener("load", () => {
+  loadingScreen.textContent = "Done!";
+  setTimeout(() => {
+    loadingScreen.style.visibility = "hidden";
+    loadingScreen.setAttribute('inert', '');
+  }, 500); // Adjust the delay as needed
+});
+
+
+
 
 // Spawn button FULLY WORKS
 
-startButton.addEventListener("click", () => {
+spookyGrassland.addEventListener("click", () => {
   // test
-  
+  //Init the bg image
+  const bgImage = new Image();
+  bgImage.src = "./assets/images/bg/SpookyGrassland.png";
+  // test
+  mainMenu.setAttribute('inert', '');
+  playButton.style.visibility = "hidden";
+  towerButton.style.visibility = "visible";
+  menuContainer.style.visibility = "hidden";
+  gameCanvas.style.visibility = "visible";
+  gameContainer.style.visibility = "visible";
+  bgImage.onload = () => {
   currentGame = new Game(document.getElementById("gameCanvas"), maps.map1, bgImage);
   currentGame.queueEnemies(enemyLayouts.normalEnemies);
   currentGame.spawnEnemiesForRound(0);
   currentGame.roundTimes[0].start();
+  requestAnimationFrame(gameLoop);
+}
+});
 
-
+grassland.addEventListener("click", () => {
+  
+  
   
   // test
-  startButton.style.visibility = "hidden";
-
+  mainMenu.setAttribute('inert', '');
+  //Init the bg image
+  const bgImage = new Image();
+  bgImage.src = "./assets/images/bg/Grassland.png";
+  towerButton.style.visibility = "visible";
+  playButton.style.visibility = "hidden";
+  menuContainer.style.visibility = "hidden";
+  gameContainer.style.visibility = "visible";
+  gameCanvas.style.visibility = "visible";
+  
+  bgImage.onload = () => {
+  currentGame = new Game(document.getElementById("gameCanvas"), maps.map1, bgImage);
+  currentGame.queueEnemies(enemyLayouts.normalEnemies);
+  currentGame.spawnEnemiesForRound(0);
+  currentGame.roundTimes[0].start();
   requestAnimationFrame(gameLoop);
+}
 });
 towerButton.addEventListener("click", () => {
   console.log("Tower button clicked");
@@ -161,4 +222,53 @@ glowSelector.addEventListener("change", (e) => {
     return;
   } else {
     currentGame.glow = e.target.value;
-  }});
+}});
+
+// Event listeners for menu stuffs
+
+towersButton.addEventListener("click", () => {
+  currentMenu = "towers";
+  mainMenu.style.visibility = "hidden";
+  mainMenu.setAttribute('inert', '');
+  towersMenu.style.visibility = "visible";
+  backButton.style.visibility = "visible";
+  backButton.removeAttribute('inert');
+});
+
+perksButton.addEventListener("click", () => {
+  currentMenu = "perks";
+  mainMenu.style.visibility = "hidden";
+  mainMenu.setAttribute('inert', '');
+  perksMenu.style.visibility = "visible";
+  backButton.style.visibility = "visible";
+  backButton.removeAttribute('inert');
+});
+
+settingsButton.addEventListener("click", () => {
+  currentMenu = "settings";
+  mainMenu.style.visibility = "hidden";
+  mainMenu.setAttribute('inert', '');
+  settingsMenu.style.visibility = "visible";
+  backButton.style.visibility = "visible";
+  backButton.removeAttribute('inert');
+});
+playButton.addEventListener("click", () => {
+  currentMenu = "game";
+  mainMenu.style.visibility = "hidden";
+  gameMenu.removeAttribute('inert');
+  gameMenu.style.visibility = "visible";
+  backButton.style.visibility = "visible";
+  backButton.removeAttribute('inert');
+});
+
+backButton.addEventListener("click", () => {
+  currentMenu = "main";
+  mainMenu.removeAttribute('inert');
+  mainMenu.style.visibility = "visible";
+  towersMenu.style.visibility = "hidden";
+  perksMenu.style.visibility = "hidden";
+  settingsMenu.style.visibility = "hidden";
+  gameMenu.style.visibility = "hidden";
+  backButton.style.visibility = "hidden";
+  backButton.setAttribute('inert', '');
+});

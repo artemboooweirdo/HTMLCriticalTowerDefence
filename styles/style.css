@@ -4,23 +4,37 @@
   font-weight: normal;
   font-style: normal;
 }
-
+* {
+  box-sizing: border-box;
+}
+/* This makes up the ENTIRE BODY like default values */
 body {
   /* nothing rn */
   font-size: 20px;
-  background-color: aqua;
+  background-color: #f0f0f0;
   margin: 0;
   box-sizing: border-box;
   overflow: hidden;
 }
-.container {
-  margin: 0;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+
+/* Loading screen */
+#loadingScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3b3b3b;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  z-index: 9999;
 }
 
+/* Game container */
+/* Game canvas */
 #gameCanvas {
   grid-column: 1 / 2;
   grid-row: 1 / -1;
@@ -31,6 +45,17 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  display: block;
+  visibility: hidden;
+}
+
+#gameContainer {
+  margin: 0;
+  box-sizing: border-box;
+  display: grid;
+  visibility: hidden;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 button {
@@ -53,18 +78,22 @@ button {
   height: 8vh;
   top: 0;
   right: 20vw;
+  visibility: hidden;
 }
 .settingsContainer {
   display: grid;
   grid-template-rows: repeat(5, minmax(0, 1fr));
   grid-template-columns: 1fr;
 }
+/* Settings title */
+/* REWORK THIS PUT IT IN A SETTINGS MENU */
 #settingsTitle {
   font-family: 'UIFont', serif;
 }
 p {
   place-self: center;
   font-size: clamp(1.5rem, 2.5vw + 1rem, 3.5rem);
+  margin: 0;
 }
 #glowSelector {
   grid-column: 1 / 2;
@@ -72,4 +101,157 @@ p {
   align-self: stretch;
   width: 100%;
   height: 100%;
+}
+
+/* Before the game starts */
+#menuContainer {
+  position: absolute;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+  height: 80vh;
+  z-index: 1000;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  border: 5px solid #000000;
+  border-radius: 10px;
+  padding: 10px;
+}
+/* The div for the main menu that just is there yk */
+#mainMenu {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-content: center; 
+  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+/* The left panel in the main menu */
+
+#playButton {
+  background-color: #4CAF50; /* Green */
+  box-sizing: border-box;
+  font-family: 'UIFont', serif;
+  font-size: clamp(1.5rem, 2.5vw + 1rem, 3.5rem);
+  border-radius: 15px;
+  padding: 40px;
+  width: 100%;
+  height: 100%;
+  grid-row: 1 / -1;
+  grid-column: -2 / -1;
+
+
+}
+#towersButton {
+  background-color: #ffcc00; /* Yellow */
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    padding: 10px;
+    font-family: 'UIFont', serif;
+    border-radius: 15px;
+    width: 100%;
+    height: 100%;
+
+}
+#perksButton {
+  background-color: #2196F3; /* Blue */
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    padding: 10px;
+    font-family: 'UIFont', serif;
+    border-radius: 15px;
+    width: 100%;
+    height: 100%;
+}
+#settingsButton {
+    background-color: #a0a0a0; /* grey */
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+    font-family: 'UIFont', serif;
+    border-radius: 15px;
+    padding: 10px;  
+    width: 100%;
+    height: 100%;
+}
+
+
+#playButton:hover {
+  background-color: #49c44d; /* Lighter Green */
+  cursor: pointer;
+}
+#towersButton:hover {
+  background-color: #ffff00; /* Lighter Yellow */
+  cursor: pointer;
+}
+#perksButton:hover {
+  background-color: #0088ff; /* Lighter Blue */
+  cursor: pointer;
+}
+#settingsButton:hover {
+    background-color: #d0d0d0;
+    cursor: pointer;
+}
+/* all of the menus */
+#towersMenu {
+  visibility: hidden;
+  background-color: #f0f0f0;
+}
+#perksMenu {
+  visibility: hidden;
+  background-color: #f0f0f0;
+}
+#settingsMenu {
+  visibility: hidden;
+  background-color: #f0f0f0;
+}
+/* back button for menus */
+#backButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff0000; /* Red */
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
+  padding: 10px;
+  font-family: 'UIFont', serif;
+  visibility: hidden;
+}
+#backButton:hover {
+  background-color: #ff4d4d; /* Lighter Red */
+  cursor: pointer;
+}
+
+#gameMenu {
+  visibility: hidden;
+  background-color: #f0f0f0;
+}
+
+/* Buttons for selecting different maps */
+
+#grasslandButton {
+  background-color: #4CAF50; /* Green */
+  box-sizing: border-box;
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 5px;
+}
+#grasslandButton:hover {
+  background-color: #49c44d; /* Lighter Green */
+  cursor: pointer;
+}
+#spookyGrasslandButton {
+  background-color: #8B0000; /* Dark Red */
+  box-sizing: border-box;
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+}
+#spookyGrasslandButton:hover {
+  background-color: #ff0000; /* Lighter Red */
+  cursor: pointer;
 }
