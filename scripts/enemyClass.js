@@ -42,6 +42,7 @@ export default class Enemy {
     this.energyARTS = 0;
     this.magicARTS = 0;
     this.physicalARTS = 0;
+
   }
 
   // 100 lines of code to NOT review :D

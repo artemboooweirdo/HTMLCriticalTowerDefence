@@ -13,6 +13,12 @@ export default class Tower {
         this.damageBuff = 0;
         this.rangeBuff = 0;
         this.targeting = "first"
+
+        this.appliedPerks = [];
+         // Add a restriction thingy so that
+        //  you cant place towers too close 
+        // to each other
+        this.placementSize = template.size
     }
     attack(enemy, deltaTime) {
         if (this.cooldown > 0) {
