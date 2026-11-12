@@ -34,30 +34,44 @@ async function loadCustomFont() {
 loadCustomFont();
 
 // spawnButton and the spawnInput dorpdown menu (I realized i misspelled dropdown)
+// All of the DOM elements that i am using
 const playButton = document.getElementById("playButton");
 const towersButton = document.getElementById("towersButton");
 const perksButton = document.getElementById("perksButton");
-
 const backButton = document.getElementById("backButton");
-
 const settingsButton = document.getElementById("settingsButton");
 const menuContainer = document.getElementById("menuContainer");
-
-
 const perksMenu = document.getElementById("perksMenu");
 const towersMenu = document.getElementById("towersMenu");
 const settingsMenu = document.getElementById("settingsMenu");
 const gameMenu = document.getElementById("gameMenu");
 const towerButton = document.getElementById("placeTower");
 const glowSelector = document.getElementById("glowSelector");
-const grassland = document.getElementById("grasslandButton");
-const spookyGrassland = document.getElementById("spookyGrasslandButton");
+const grassland = document.getElementById("grassland");
+const spookyGrassland = document.getElementById("spookyGrassland");
 const mainMenu = document.getElementById("mainMenu");
 const gameContainer = document.getElementById("gameContainer");
 const gameCanvas = document.getElementById("gameCanvas");
-const loadingScreen = document.getElementById("loadingScreen");
+const loadingText = document.getElementById("loadingText");
+const mapButtons = document.querySelectorAll(".map");
+const leftButton = document.getElementById("leftButton");
+const rightButton = document.getElementById("rightButton");
 
+const towerSlots = document.querySelectorAll(".equippedTower");
+towerSlots.forEach((slot) => {
+  slot.src = `../assets/images/towerSprites/92x92.png`; // placeholder
+});
 
+// Hide and make inert
+function hidert(menu) {
+  menu.setAttribute('hidden', '');
+  menu.setAttribute('inert', '');
+}
+// unhide and make active
+function unhidert(menu) {
+  menu.removeAttribute('hidden');
+  menu.removeAttribute('inert');
+}
 
 // Rounds and other misc
 const equippedTowers = []; // Array to hold equipped towers
@@ -65,7 +79,6 @@ const equippedPerks = []; // Array to hold equipped perks
 let currentGame = null;
 let currentMenu = "main"; // Possible values: "main", "towers", "perks", "settings"
 const canvas = document.getElementById("gameCanvas");
-
 // Main Game Loop
 function gameLoop(timestamp) {
 
@@ -88,62 +101,16 @@ function gameLoop(timestamp) {
 
 // On page load, hide the loading screen after a short delay to ensure all assets are loaded
 window.addEventListener("load", () => {
-  loadingScreen.textContent = "Done!";
+  loadingText.textContent = "Done!";
   setTimeout(() => {
     loadingScreen.style.visibility = "hidden";
     loadingScreen.setAttribute('inert', '');
-  }, 500); // Adjust the delay as needed
+  }, 1000); // Adjust the delay as needed
 });
 
 
 
 
-// Spawn button FULLY WORKS
-
-spookyGrassland.addEventListener("click", () => {
-  // test
-  //Init the bg image
-  const bgImage = new Image();
-  bgImage.src = "./assets/images/bg/SpookyGrassland.png";
-  // test
-  mainMenu.setAttribute('inert', '');
-  playButton.style.visibility = "hidden";
-  towerButton.style.visibility = "visible";
-  menuContainer.style.visibility = "hidden";
-  gameCanvas.style.visibility = "visible";
-  gameContainer.style.visibility = "visible";
-  bgImage.onload = () => {
-  currentGame = new Game(document.getElementById("gameCanvas"), maps.map1, bgImage);
-  currentGame.queueEnemies(enemyLayouts.normalEnemies);
-  currentGame.spawnEnemiesForRound(0);
-  currentGame.roundTimes[0].start();
-  requestAnimationFrame(gameLoop);
-}
-});
-
-grassland.addEventListener("click", () => {
-  
-  
-  
-  // test
-  mainMenu.setAttribute('inert', '');
-  //Init the bg image
-  const bgImage = new Image();
-  bgImage.src = "./assets/images/bg/Grassland.png";
-  towerButton.style.visibility = "visible";
-  playButton.style.visibility = "hidden";
-  menuContainer.style.visibility = "hidden";
-  gameContainer.style.visibility = "visible";
-  gameCanvas.style.visibility = "visible";
-  
-  bgImage.onload = () => {
-  currentGame = new Game(document.getElementById("gameCanvas"), maps.map1, bgImage);
-  currentGame.queueEnemies(enemyLayouts.normalEnemies);
-  currentGame.spawnEnemiesForRound(0);
-  currentGame.roundTimes[0].start();
-  requestAnimationFrame(gameLoop);
-}
-});
 towerButton.addEventListener("click", () => {
   console.log("Tower button clicked");
   if (!currentGame) {
@@ -181,7 +148,7 @@ canvas.addEventListener("click", (e) => {
   }
   currentGame.placingTowerEnd();
 });
-
+// Key listener for the game W A S and D for movement and - + for zoom
 document.addEventListener("keydown" , (e) => {
   if (!currentGame) return;
   if (e.key == "w") currentGame.dyOffset = 1;
@@ -210,6 +177,7 @@ document.addEventListener("keydown" , (e) => {
 })
 
 document.addEventListener("keyup", (e) => {
+  if (!currentGame) return;
   if (e.key == "w") currentGame.dyOffset = 0;
   if (e.key == "s") currentGame.dyOffset = 0;
   if (e.key == "a") currentGame.dxOffset = 0;
@@ -228,47 +196,72 @@ glowSelector.addEventListener("change", (e) => {
 
 towersButton.addEventListener("click", () => {
   currentMenu = "towers";
-  mainMenu.style.visibility = "hidden";
-  mainMenu.setAttribute('inert', '');
-  towersMenu.style.visibility = "visible";
-  backButton.style.visibility = "visible";
-  backButton.removeAttribute('inert');
+  hidert(mainMenu);
+  unhidert(backButton);
+  unhidert(towersMenu);
 });
 
 perksButton.addEventListener("click", () => {
   currentMenu = "perks";
-  mainMenu.style.visibility = "hidden";
-  mainMenu.setAttribute('inert', '');
-  perksMenu.style.visibility = "visible";
-  backButton.style.visibility = "visible";
-  backButton.removeAttribute('inert');
+  hidert(mainMenu);
+  unhidert(backButton);
+  unhidert(perksMenu);
 });
 
 settingsButton.addEventListener("click", () => {
   currentMenu = "settings";
-  mainMenu.style.visibility = "hidden";
-  mainMenu.setAttribute('inert', '');
-  settingsMenu.style.visibility = "visible";
-  backButton.style.visibility = "visible";
-  backButton.removeAttribute('inert');
+  hidert(mainMenu);
+  unhidert(settingsMenu);
+  unhidert(backButton);
 });
 playButton.addEventListener("click", () => {
   currentMenu = "game";
-  mainMenu.style.visibility = "hidden";
-  gameMenu.removeAttribute('inert');
-  gameMenu.style.visibility = "visible";
-  backButton.style.visibility = "visible";
-  backButton.removeAttribute('inert');
+  hidert(mainMenu);
+  unhidert(gameMenu);
+  unhidert(backButton);
 });
 
 backButton.addEventListener("click", () => {
+  if (currentMenu === "game") {
+    hidert(gameMenu);
+  } else if (currentMenu === "towers") {
+    hidert(towersMenu);
+  } else if (currentMenu === "perks") {
+    hidert(perksMenu);
+  } else if (currentMenu === "settings") {
+    hidert(settingsMenu);
+  } else {
+    console.error("Unknown menu state:", currentMenu);
+  }
   currentMenu = "main";
-  mainMenu.removeAttribute('inert');
-  mainMenu.style.visibility = "visible";
-  towersMenu.style.visibility = "hidden";
-  perksMenu.style.visibility = "hidden";
-  settingsMenu.style.visibility = "hidden";
-  gameMenu.style.visibility = "hidden";
-  backButton.style.visibility = "hidden";
-  backButton.setAttribute('inert', '');
+  unhidert(mainMenu);
+  hidert(backButton);
+});
+
+mapButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const mapId = button.id;
+    console.log(`Map selected: ${mapId}`);
+    button.setAttribute('disabled', ''); // Disable the button to prevent multiple clicks
+    button.style.opacity = '0.5'; // Visual feedback for disabled button
+    // Here you can add logic to load the selected map into the game
+    const bgImage = new Image();
+    bgImage.src = `./assets/images/bg/${mapId}.png`;
+    bgImage.onload = () => {
+
+      unhidert(towerButton);
+      towerButton.style.visibility = "visible";
+      gameCanvas.style.visibility = "visible";
+
+      hidert(menuContainer);
+      unhidert(gameContainer);
+      gameContainer.style.visibility = "visible";
+      gameContainer.style.display = "block"; // Show the game container
+      currentGame = new Game(document.getElementById("gameCanvas"), maps[mapId], bgImage);
+      currentGame.queueEnemies(enemyLayouts.normalEnemies);
+      currentGame.spawnEnemiesForRound(0);
+      currentGame.roundTimes[0].start();
+      requestAnimationFrame(gameLoop);
+    };
+  });
 });

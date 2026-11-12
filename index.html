@@ -10,16 +10,35 @@
     <link rel="stylesheet" href="./styles/style.css" />
   </head>
   <body>
-    <!-- Buttons that are fixed positioning -->
+    <!-- Loading Screen on startup -->
     <div id="loadingScreen">
-      <div id="tipTitle">Tip<br></div>
-
-      <div id="tipText"><span>Elemental Towers deal less damage to enemies with resistance</span><br></div>
-      <div id="loadingText">Loading...</div>
+      <div id="loadingText">Loading</div>
+      <div id="tipTitle">Tip:</div>
+      <div id="tipTextContainer"><span id="tipText">Loading tip...</span></div>
+      <script>
+        const loadingTips = [
+          "Elemental Towers deal less damage to enemies with resistance.",
+          "You can zoom in and out using the '-' and '=' keys.",
+          "Use WASD to pan around the map.",
+          "Press 'Escape' to cancel tower placement.",
+          "Different towers have different ranges and damage types.",
+          "Keep an eye on your base HP; if it reaches zero, you lose!",
+          "Plan your tower placements strategically for maximum efficiency.",
+          "Some enemies may have special abilities; adapt your strategy accordingly.",
+          "Upgrading towers can significantly increase their effectiveness.",
+          "Remember to manage your money wisely to build and upgrade towers.",
+          "quacky"
+        ];
+        document.getElementById("tipText").textContent =
+          loadingTips[Math.floor(Math.random() * loadingTips.length)];
+      </script>
     </div>
+    <!-- Place a tower button -->
+     <!-- MAKE THIS SO THAT THE BUTTONS ARE IN THE ACTUAL GAME -->
     <button id="placeTower">Place a Blaster</button>
-    <!---->
     
+    <!-- Game Container -->
+     <!-- This is the game canvas and the stuff on the side like the glow -->
     <div id="gameContainer">
       <canvas id="gameCanvas" height="720px" width="1200px"></canvas>
       <div class="settingsContainer">
@@ -29,48 +48,154 @@
         <input type="color" id="glowSelector" name="favcolor" value="#ff0000">
       </div>
     </div>
+
+    <!-- The container for coins, tokens, exp, and equipped towers -->
+    <div id="playerInfoContainer">
+      <div id="tokens">100</div>
+      <div id="coins">$154009</div>
+      <div id="exp">Level: 80 [30/400]</div>
+      <div id="expBar">
+        <div id="expBarFill"></div>
+      </div>
+      <div id="equippedTowers">
+        <!-- These are example towers REMOVE THESE LATER -->
+         <!-- How will I incorporate this lmao -->
+        <div id="towerSlot1" class="equippedTower">
+          <img class="placehold92">
+          <span id="towerName1">Blaster</span>
+        </div>
+        <div id="towerSlot2" class="equippedTower">
+          <img class="placehold92">
+          <span id="towerName2">Sniper</span>
+        </div>
+        <div id="towerSlot3" class="equippedTower">
+          <img class="placehold92">
+          <span id="towerName3">Bandit</span>
+        </div>
+        <div id="towerSlot4" class="equippedTower">
+          <img class="placehold92">
+          <span id="towerName4">Thief</span>
+        </div>
+        <div id="towerSlot5" class="equippedTower">
+          <img class="placehold92">
+          <span id="towerName5">Archer</span>
+        </div>
+        <div id="towerSlot6" class="equippedTower">
+          <img class="placehold92">
+          <span id="towerName6">Longer Text</span>
+        </div>
+      </div>
+    </div>
     <div id="menuContainer">
       <!-- This is the menu that is shown on startup -->
 
       <div id="mainMenu">
-          <div id="towersButton">
+          <div id="equipmentButton">
             Equipment
           </div>
-          <div id="perksButton">
-            Perks
+          <div id="bountiesButton">
+            Bounties
           </div>
-          <div id="settingsButton">
-            Settings
+          <div id="donateButton">
+            Donate
           </div>
+          <div id="otherButton">Other</div>
         <div id="playButton">Play</div>
       </div>
 
-      <!-- Menu for tower Selection -->
-      <div id="towersMenu" inert>
-        <p>Towers</p>
+      <!-- Tabs in equipment -->
+
+      <div id="equipmentMenu" inert hidden>
+        <!-- Equipment Title -->
+        <div id="equipmentTitle">Equipment</div>
+
+        <!-- Buttons near the top of equipment -->
+        <div id="equipmentTabs">
+          <div id="towersTabButton" class="equipmentTabButton">Towers</div>
+          <div id="perksTabButton" class="equipmentTabButton">Perks</div>
+          <div id="cosmeticsTabButton" class="equipmentTabButton">Cosmetics</div>
+          <div id="comingSoonTabButton" class="equipmentTabButton">Coming Soon</div>
+        </div>
+        <div id="towersTab">
+          <div id="towerDesc"></div>
+          <div id="towers"></div>
+        </div>
+        <div id="perksTab">
+          <div id="perkTitle">ALL EQUIPPED PERKS</div>
+          <div id="basicPerks"></div>
+          <div id="slotPerks"></div>
+          <div id="perkShop"></div>
+        </div>
+        <div id="cosmeticsTab"></div>
+        <div id="comingSoonTab">
+          coming soon
+        </div>
+
+        <!-- Menus for those tabs -->
+         <div id="basicPerksMenu"></div>
+         <div id="slotPerksMenu">
+          <div id="slotPerks"></div>
+          <div id="slotPerkDesc"></div>
+         </div>
+         <div id="perkShopMenu">
+
+         </div>
+
+
       </div>
 
-      <!-- Menu for perk Selection -->
-      <div id="perksMenu" inert>
-        <p>Perks</p>
+      <!-- Menu for bounties -->
+      <div id="bountiesMenu" inert hidden>
+        <div id="dailyTab"></div>
+        <div id="mapsTab">
+          <div id="classicMaps"></div>
+          <div id="specialMaps"></div>
+          <div id="operationMaps"></div>
+        </div>
+        <div id="rewardsTab">
+          <div id="generalRewards"></div>
+          <div id="perkRewards"></div>
+        </div>
       </div>
 
-      <!-- Menu for settings -->
-      <!-- Such as tower colors and secrets -->
-      <div id="settingsMenu" inert>
-        <p>Settings</p>
+      <!-- Menu for other stuff -->
+      <div id="otherMenu" inert hidden>
+        <p>Other</p>
       </div>
       <!-- Menu for game selection -->
-      <div id="gameMenu" inert>
-        <div id="grasslandButton">
-          Grassland
+      <div id="gameMenu" inert hidden>
+        <div id="leftButton" hidden inert>
+          &lt;
         </div>
-        <div id="spookyGrasslandButton">
-          Spooky Grassland
+        <div id="rightButton" hidden inert>
+          &gt;
+        </div>
+        <div id="easyMaps" class="mapTab">
+          <div id="grassland" class="map">
+            Grassland
+          </div>
+          <div id="spookyGrassland" class="map">
+            Spooky Grassland
+          </div>
+          <div id="baseplate" class="map">
+            Baseplate
+          </div>
+        </div>
+        <div id="mediumMaps" class="mapTab" hidden inert>
+
+        </div>
+        <div id="hardMaps" class="mapTab" hidden inert>
+
+        </div>
+        <div id="quiteHardMaps" class="mapTab" hidden inert>
+
+        </div>
+        <div id="extremeMaps" class="mapTab" hidden inert>
+
         </div>
       </div>
-      <div id="backButton" inert>
-        &lt;
+      <div id="backButton" inert hidden>
+        X
       </div>
     </div>
 

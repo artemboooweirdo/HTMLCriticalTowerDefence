@@ -7,6 +7,11 @@
 * {
   box-sizing: border-box;
 }
+
+[hidden] {
+  display: none !important;
+}
+
 /* This makes up the ENTIRE BODY like default values */
 body {
   /* nothing rn */
@@ -27,6 +32,7 @@ body {
   background-color: #3b3b3b;
   color: #fff;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
@@ -106,10 +112,10 @@ p {
 /* Before the game starts */
 #menuContainer {
   position: absolute;
-  top: 10vh;
-  left: 10vw;
-  width: 80vw;
-  height: 80vh;
+  top: 20vh;
+  left: 20vw;
+  width: 60vw;
+  height: 60vh;
   z-index: 1000;
   display: flex;
   justify-content: center; 
@@ -126,7 +132,7 @@ p {
   justify-content: center; 
   align-items: center;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 /* The left panel in the main menu */
@@ -196,62 +202,181 @@ p {
 }
 /* all of the menus */
 #towersMenu {
-  visibility: hidden;
   background-color: #f0f0f0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(1, minmax(0, 1fr));
 }
+/* Tower sub-menus */
+#towerSelectionMenu {
+  grid-row: 1 / 2;
+  grid-column: 3 / -1;
+}
+#towerPreview {
+  grid-row: 1 / 2;
+  grid-column: 1 / 3;
+}
+
 #perksMenu {
-  visibility: hidden;
   background-color: #f0f0f0;
 }
+
 #settingsMenu {
-  visibility: hidden;
   background-color: #f0f0f0;
 }
+/* Game menu stuff */
+#gameMenu {
+  background-color: #f0f0f0;
+  width: 100%;
+  height: 100%;
+  padding: 60px;
+}
+.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 5px;
+}
+.mapTab {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
 /* back button for menus */
 #backButton {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  left: 5px;
   background-color: #ff0000; /* Red */
   box-sizing: border-box;
-  width: auto;
-  height: auto;
-  padding: 10px;
+  border-radius: 5px;
+  border: 3px solid #000000;
+  width: min-content;
+  height: min-content;
+  padding-left: 10px;
+  padding-right: 10px;
   font-family: 'UIFont', serif;
-  visibility: hidden;
+  font-size: clamp(1.5rem, 2.5vw + 1rem, 3.5rem);
 }
 #backButton:hover {
   background-color: #ff4d4d; /* Lighter Red */
   cursor: pointer;
 }
 
-#gameMenu {
-  visibility: hidden;
-  background-color: #f0f0f0;
-}
 
 /* Buttons for selecting different maps */
 
-#grasslandButton {
+#grassland {
   background-color: #4CAF50; /* Green */
   box-sizing: border-box;
-  width: 50%;
-  height: 100%;
-  padding: 10px;
-  border-radius: 5px;
+
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
 }
-#grasslandButton:hover {
+#grassland:hover {
   background-color: #49c44d; /* Lighter Green */
   cursor: pointer;
 }
-#spookyGrasslandButton {
+#spookyGrassland {
   background-color: #8B0000; /* Dark Red */
   box-sizing: border-box;
-  width: 50%;
-  height: 100%;
   padding: 10px;
+  border-radius: 5px;
+  grid-row: -2 / -1;
+  grid-column: -2 / -1;
 }
-#spookyGrasslandButton:hover {
+#spookyGrassland:hover {
   background-color: #ff0000; /* Lighter Red */
   cursor: pointer;
+}
+#baseplate {
+  background-color: #808080; /* Grey */
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 5px;
+  grid-row: 2 / 3;
+  grid-column: 3 / 4;
+}
+#baseplate:hover {
+  background-color: #a0a0a0; /* Lighter Grey */
+  cursor: pointer;
+}
+
+#playerInfoContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 30vh;
+  height: 25vh;
+  display: flex;
+  flex-direction: column;
+
+  /* make all items go as far left as they can */
+  align-items: flex-start;
+  justify-content: flex-end;
+  font-family: "UIfont", serif;
+}
+
+#equippedTowers {
+  display: flex;
+  flex-direction: row;
+}
+.equippedTower {
+  width: 5vw;
+  height: 5vw;
+  margin: 0.2vw;
+  border: 2px solid #f0f0f0;
+  border-radius: 5px;
+  background-color: #3F3F3F;
+  color: #f0f0f0;
+  display: block;
+  font-size: 1rem;
+  overflow: hidden;
+
+}
+/* later add this */
+/* To make the tower show up as an image */
+.equippedTower img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.equippedTower span {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  -webkit-text-stroke: 0.4px black;
+  font-size: clamp(0.5rem, 1vw + 0.5rem, 1.5rem);
+  text-align: center;
+}
+#towerSlot6 {
+  background-color: #2B2D3C;
+}
+#expBar {
+  width: 25vw;
+  height: 2vh;
+  background-color: #161616;
+  border-radius: 5px;
+}
+
+
+/* Test */
+@keyframes mainMenuAnim {
+  0% {
+    transform: skewY(0deg);
+  }
+  50% {
+    transform: skewY(90deg);
+  }
+  100% {
+    transform: skewY(180deg);
+  }
 }
