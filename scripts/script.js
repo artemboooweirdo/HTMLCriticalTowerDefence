@@ -41,9 +41,6 @@ const perksButton = document.getElementById("perksButton");
 const backButton = document.getElementById("backButton");
 const settingsButton = document.getElementById("settingsButton");
 const menuContainer = document.getElementById("menuContainer");
-const perksMenu = document.getElementById("perksMenu");
-const towersMenu = document.getElementById("towersMenu");
-const settingsMenu = document.getElementById("settingsMenu");
 const gameMenu = document.getElementById("gameMenu");
 const towerButton = document.getElementById("placeTower");
 const glowSelector = document.getElementById("glowSelector");
@@ -57,10 +54,24 @@ const mapButtons = document.querySelectorAll(".map");
 const leftButton = document.getElementById("leftButton");
 const rightButton = document.getElementById("rightButton");
 
-const towerSlots = document.querySelectorAll(".equippedTower");
-towerSlots.forEach((slot) => {
-  slot.src = `../assets/images/towerSprites/92x92.png`; // placeholder
+
+
+// Test for fitting text into tower thingys
+
+const equippedTowerTexts = document.querySelectorAll(".equippedTower div");
+equippedTowerTexts.forEach((text) => {
+  let currentFontSize = parseFloat(window.getComputedStyle(text).fontSize);
+  while (text.scrollWidth > text.clientWidth) {
+    text.style.fontSize = `${currentFontSize - 1}px`;
+    currentFontSize -= 1;
+  }
+  // Move below so that on hover it pops up for the user to see the full name of the tower
 });
+
+
+
+
+// Test for fitting text into tower thingys
 
 // Hide and make inert
 function hidert(menu) {
@@ -84,6 +95,7 @@ function gameLoop(timestamp) {
 
   currentGame.update(timestamp);
 
+  // Check if the game is over (basehp <= 0)
   if (currentGame.baseHp <= 0) {
     currentGame.baseHp = 0;
     currentGame.draw(); // Draw the final state of the game before reloading
@@ -194,49 +206,6 @@ glowSelector.addEventListener("change", (e) => {
 
 // Event listeners for menu stuffs
 
-towersButton.addEventListener("click", () => {
-  currentMenu = "towers";
-  hidert(mainMenu);
-  unhidert(backButton);
-  unhidert(towersMenu);
-});
-
-perksButton.addEventListener("click", () => {
-  currentMenu = "perks";
-  hidert(mainMenu);
-  unhidert(backButton);
-  unhidert(perksMenu);
-});
-
-settingsButton.addEventListener("click", () => {
-  currentMenu = "settings";
-  hidert(mainMenu);
-  unhidert(settingsMenu);
-  unhidert(backButton);
-});
-playButton.addEventListener("click", () => {
-  currentMenu = "game";
-  hidert(mainMenu);
-  unhidert(gameMenu);
-  unhidert(backButton);
-});
-
-backButton.addEventListener("click", () => {
-  if (currentMenu === "game") {
-    hidert(gameMenu);
-  } else if (currentMenu === "towers") {
-    hidert(towersMenu);
-  } else if (currentMenu === "perks") {
-    hidert(perksMenu);
-  } else if (currentMenu === "settings") {
-    hidert(settingsMenu);
-  } else {
-    console.error("Unknown menu state:", currentMenu);
-  }
-  currentMenu = "main";
-  unhidert(mainMenu);
-  hidert(backButton);
-});
 
 mapButtons.forEach(button => {
   button.addEventListener("click", () => {
@@ -261,7 +230,7 @@ mapButtons.forEach(button => {
       currentGame.queueEnemies(enemyLayouts.normalEnemies);
       currentGame.spawnEnemiesForRound(0);
       currentGame.roundTimes[0].start();
-      requestAnimationFrame(gameLoop);
+      requestAnimationFrame(gameLoop);  
     };
   });
 });

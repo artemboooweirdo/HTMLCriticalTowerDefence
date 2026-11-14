@@ -1,0 +1,36 @@
+/* Side Menu */
+#sideContainer {
+  position: absolute;
+  display: grid;
+  left: 0;
+  top: 50%;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  border: 5px solid #000000;
+  height: auto;
+  width: auto;
+  gap: 4vh;
+  margin-left: 1vw;
+  transform: translateY(-65%);
+}
+
+#sideContainer div {
+  display: flex;
+  height: 10vh;
+  width: 10vh;
+  border: 5px dotted #000000;
+  border-radius: 5px;
+}
+
+#sidecontainer p {
+  font-family: 'UIFont', serif;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8cqmin;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* This is for another day signing off 11:52pm gby gng */

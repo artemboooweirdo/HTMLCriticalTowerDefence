@@ -1,0 +1,105 @@
+/* Container for the player info div */
+#playerInfoContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 30vh;
+  height: 25vh;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.2vw;
+  /* make all items go as far left as they can */
+  align-items: flex-start;
+  justify-content: flex-end;
+  font-family: "UIfont", serif;
+}
+
+/* The row of towers (6 of 'em) */
+#equippedTowerContainer {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  width: auto;
+}
+
+/* Default values for each tower slot */
+.equippedTower {
+  width: 5vw;
+  height: 5vw;
+  border: 2px solid #f0f0f0;
+  border-radius: 5px;
+  background-color: #3F3F3F;
+  color: #f0f0f0;
+  display: block;
+  font-size: 1.15rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Make the bg image for each tower slot */
+.equippedTower img {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Style of tower cost */
+
+.towerCost {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #42e41e;
+  -webkit-text-stroke: 0.4px black;
+  font-size: 1.2rem;
+}
+
+/* basic stats for each tower box */
+.equippedTower div {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  white-space: nowrap;
+  -webkit-text-stroke: 0.3px black;
+  text-align: center;
+  z-index: 2;
+  transform: translateY(100%);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Make text go up on hover */
+.equippedTower:hover div {
+  transform: translateY(0);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* To make the 6th tower slot slightly different in color (like real game) */
+#towerSlot6 {
+  background-color: #2B2D3C;
+}
+
+/* Exp bar stuff */
+#expBarContainer {
+  width: 25vw;
+  height: 1.3vh;
+  background-color: #161616;
+  border-radius: 3px;
+  margin-top: 0.5vh;
+  margin-bottom: 0.5vh;
+}
+/* Dupes the xp bar to show fill (as %) */
+#expBarContainer::after {
+  content: "";
+  display: block;
+  width: 10%;
+  height: 100%;
+  background-color: #00d1ff;
+  border-radius: 0.5px;
+}

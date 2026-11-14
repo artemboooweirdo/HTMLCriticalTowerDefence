@@ -8,6 +8,9 @@
     />
     <title>Start The TD!</title>
     <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="./styles/sideContainer.css" />
+    <link rel="stylesheet" href="./styles/loadingScreen.css" />
+    <link rel="stylesheet" href="./styles/playerInfo.css" />
   </head>
   <body>
     <!-- Loading Screen on startup -->
@@ -27,181 +30,238 @@
           "Some enemies may have special abilities; adapt your strategy accordingly.",
           "Upgrading towers can significantly increase their effectiveness.",
           "Remember to manage your money wisely to build and upgrade towers.",
-          "quacky"
+          "Not all towers are good in every situation.",
+          "The game is still in development, so expect bugs and balance changes.",
+          "Longer Text",
+          "Even Longer Text",
+          "quacky",
         ];
         document.getElementById("tipText").textContent =
           loadingTips[Math.floor(Math.random() * loadingTips.length)];
       </script>
     </div>
+
+
     <!-- Place a tower button -->
-     <!-- MAKE THIS SO THAT THE BUTTONS ARE IN THE ACTUAL GAME -->
+    <!-- MAKE THIS SO THAT THE BUTTONS ARE IN THE ACTUAL GAME -->
     <button id="placeTower">Place a Blaster</button>
-    
+
     <!-- Game Container -->
-     <!-- This is the game canvas and the stuff on the side like the glow -->
+    <!-- This is the game canvas and the stuff on the side like the glow -->
     <div id="gameContainer">
       <canvas id="gameCanvas" height="720px" width="1200px"></canvas>
       <div class="settingsContainer">
         <p id="settingsTitle">Settings</p>
         <p>Glow</p>
         <p>\/</p>
-        <input type="color" id="glowSelector" name="favcolor" value="#ff0000">
+        <input type="color" id="glowSelector" name="favcolor" value="#ff0000" />
       </div>
     </div>
 
     <!-- The container for coins, tokens, exp, and equipped towers -->
+    <!-- Please work on the text popping up from the bottom -->
+    <!-- Also, please fix the text being too large for its container-->
     <div id="playerInfoContainer">
-      <div id="tokens">100</div>
-      <div id="coins">$154009</div>
-      <div id="exp">Level: 80 [30/400]</div>
-      <div id="expBar">
-        <div id="expBarFill"></div>
-      </div>
-      <div id="equippedTowers">
+      <div id="tokenContainer">Tokens 189</div>
+      <div id="coinContainer">$154009</div>
+      <div id="expContainer">Level: 80 [30/400]</div>
+      <div id="expBarContainer"></div>
+      <div id="equippedTowerContainer">
         <!-- These are example towers REMOVE THESE LATER -->
-         <!-- How will I incorporate this lmao -->
+        <!-- How will I incorporate this lmao -->
         <div id="towerSlot1" class="equippedTower">
-          <img class="placehold92">
-          <span id="towerName1">Blaster</span>
+          <span class="towerCost">$1750</span>
+          <img src="./assets/images/towerSprites/blaster.webp" alt="Blaster" />
+          <div class="towerNameContainer" id="towerNameContainer1">
+            <span>Blaster</span>
+          </div>
         </div>
         <div id="towerSlot2" class="equippedTower">
-          <img class="placehold92">
-          <span id="towerName2">Sniper</span>
+          <span class="towerCost">$10</span>
+          <img
+            src="./assets/images/towerSprites/dumpster.webp"
+            alt="Dumpster Fire Ripoff"
+          />
+          <div class="towerNameContainer" id="towerNameContainer2">
+            <span>Dumpster Fire</span>
+            <span>Ripoff</span>
+          </div>
         </div>
         <div id="towerSlot3" class="equippedTower">
-          <img class="placehold92">
-          <span id="towerName3">Bandit</span>
+          <span class="towerCost">$400</span>
+          <img src="./assets/images/towerSprites/bandit.webp" alt="Bandit" />
+          <div class="towerNameContainer" id="towerNameContainer3">
+            <span>Bandit</span>
+          </div>
         </div>
         <div id="towerSlot4" class="equippedTower">
-          <img class="placehold92">
-          <span id="towerName4">Thief</span>
+          <span class="towerCost">$550</span>
+          <img src="./assets/images/towerSprites/thief.webp" alt="Thief" />
+          <div class="towerNameContainer" id="towerNameContainer4">
+            <span>Thief</span>
+          </div>
         </div>
         <div id="towerSlot5" class="equippedTower">
-          <img class="placehold92">
-          <span id="towerName5">Archer</span>
+          <span class="towerCost">$450</span>
+          <img src="./assets/images/towerSprites/archer.webp" alt="Archer" />
+          <div class="towerNameContainer" id="towerNameContainer5">
+            <span>Archer</span>
+          </div>
         </div>
         <div id="towerSlot6" class="equippedTower">
-          <img class="placehold92">
-          <span id="towerName6">Longer Text</span>
+          <span class="towerCost">$20000</span>
+          <img
+            src="./assets/images/towerSprites/longerText.webp"
+            alt="Longer Text"
+          />
+          <div class="towerNameContainer" id="towerNameContainer6">
+            <span>Sample this</span>
+            <span>Longer Text bla bla</span>
+          </div>
         </div>
       </div>
     </div>
-    <div id="menuContainer">
-      <!-- This is the menu that is shown on startup -->
 
-      <div id="mainMenu">
-          <div id="equipmentButton">
-            Equipment
-          </div>
-          <div id="bountiesButton">
-            Bounties
-          </div>
-          <div id="donateButton">
-            Donate
-          </div>
-          <div id="otherButton">Other</div>
-        <div id="playButton">Play</div>
+    <!-- This is the side container.-->
+    <!-- He provides buttons for my ui -->
+    <!-- say thank you to sideContainer -->
+    <div id="sideContainer">
+      <div id="equipmentButton">
+        <img />
+        <p>Equipment</p>
       </div>
-
-      <!-- Tabs in equipment -->
-
-      <div id="equipmentMenu" inert hidden>
-        <!-- Equipment Title -->
-        <div id="equipmentTitle">Equipment</div>
-
-        <!-- Buttons near the top of equipment -->
-        <div id="equipmentTabs">
-          <div id="towersTabButton" class="equipmentTabButton">Towers</div>
-          <div id="perksTabButton" class="equipmentTabButton">Perks</div>
-          <div id="cosmeticsTabButton" class="equipmentTabButton">Cosmetics</div>
-          <div id="comingSoonTabButton" class="equipmentTabButton">Coming Soon</div>
-        </div>
-        <div id="towersTab">
-          <div id="towerDesc"></div>
-          <div id="towers"></div>
-        </div>
-        <div id="perksTab">
-          <div id="perkTitle">ALL EQUIPPED PERKS</div>
-          <div id="basicPerks"></div>
-          <div id="slotPerks"></div>
-          <div id="perkShop"></div>
-        </div>
-        <div id="cosmeticsTab"></div>
-        <div id="comingSoonTab">
-          coming soon
-        </div>
-
-        <!-- Menus for those tabs -->
-         <div id="basicPerksMenu"></div>
-         <div id="slotPerksMenu">
-          <div id="slotPerks"></div>
-          <div id="slotPerkDesc"></div>
-         </div>
-         <div id="perkShopMenu">
-
-         </div>
-
-
+      <div id="bountiesButton">
+        <img />
+        <p>Bounties</p>
       </div>
-
-      <!-- Menu for bounties -->
-      <div id="bountiesMenu" inert hidden>
-        <div id="dailyTab"></div>
-        <div id="mapsTab">
-          <div id="classicMaps"></div>
-          <div id="specialMaps"></div>
-          <div id="operationMaps"></div>
-        </div>
-        <div id="rewardsTab">
-          <div id="generalRewards"></div>
-          <div id="perkRewards"></div>
-        </div>
+      <div id="donateButton">
+        <img />
+        <p>Donate</p>
       </div>
-
-      <!-- Menu for other stuff -->
-      <div id="otherMenu" inert hidden>
+      <div id="otherButton">
+        <img />
         <p>Other</p>
       </div>
-      <!-- Menu for game selection -->
-      <div id="gameMenu" inert hidden>
-        <div id="leftButton" hidden inert>
-          &lt;
-        </div>
-        <div id="rightButton" hidden inert>
-          &gt;
-        </div>
-        <div id="easyMaps" class="mapTab">
-          <div id="grassland" class="map">
-            Grassland
-          </div>
-          <div id="spookyGrassland" class="map">
-            Spooky Grassland
-          </div>
-          <div id="baseplate" class="map">
-            Baseplate
-          </div>
-        </div>
-        <div id="mediumMaps" class="mapTab" hidden inert>
+    </div>
 
+    <!-- Container when clicking the equipment button -->
+    <div id="equipmentContainerMenu" class="menu" hidden inert>
+      <div id="equipmentTitle">
+        <div id="towerColorsToggle">
+          <p>Tower Colors</p>
+          <input type="checkbox" id="towerColorsCheckbox" />
         </div>
-        <div id="hardMaps" class="mapTab" hidden inert>
-
-        </div>
-        <div id="quiteHardMaps" class="mapTab" hidden inert>
-
-        </div>
-        <div id="extremeMaps" class="mapTab" hidden inert>
-
+        <div id="equipmentTitleText">EQUIPMENT</div>
+        <div id="equipmentCloseButton">
+          <p>X</p>
         </div>
       </div>
-      <div id="backButton" inert hidden>
-        X
+      <div id="equipmentTabs">
+        <div class="equipmentTab" id="equipmentTab1">Towers</div>
+        <div class="equipmentTab" id="equipmentTab2">Perks</div>
+        <div class="equipmentTab" id="equipmentTab3">Cosmetics</div>
+        <div class="equipmentTab" id="equipmentTab">coming soon</div>
+      </div>
+      <div id="equipmentMenu">
+        <div id="towerTab" class="equipmentTab">
+          <div id="towerPreview">
+            <img id="towerPreviewImage" />
+            <span>Smuggler</span>
+            <span>Ground</span>
+            <img id="towerType" />
+            <div>
+              <div>Select a tower to view its info</div>
+              <div id="bottomPreviewButtons">
+                <button id="equipTowerButton">Equip</button>
+                <button id="comingSoonButton">Upgrade</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="towerList">
+            <div class="towerItem" id="towerItem1">
+              <img
+                src="./assets/images/towerSprites/blaster.webp"
+                alt="Blaster"
+              />
+              <p>Blaster</p>
+            </div>
+            <div class="towerItem" id="towerItem2">
+              <img
+                src="./assets/images/towerSprites/dumpster.webp"
+                alt="Dumpster Fire Ripoff"
+              />
+              <p>Dumpster Fire</p>
+            </div>
+            <div class="towerItem" id="towerItem3">
+              <img
+                src="./assets/images/towerSprites/bandit.webp"
+                alt="Bandit"
+              />
+              <p>Bandit</p>
+            </div>
+            <div class="towerItem" id="towerItem4">
+              <img src="./assets/images/towerSprites/thief.webp" alt="Thief" />
+              <p>Thief</p>
+            </div>
+            <div class="towerItem" id="towerItem5">
+              <img
+                src="./assets/images/towerSprites/archer.webp"
+                alt="Archer"
+              />
+              <p>Archer</p>
+            </div>
+          </div>
+        </div>
+        <div id="perksTab" class="equipmentTab">
+          <div id="basicPerksButton"></div>
+          <div id="slotPerksButton"></div>
+          <div id="perkShopButton"></div>
+        </div>
+        <div id="cosmeticsTab" class="equipmentTab">
+          <div id="placeEffectsTab"></div>
+          <div id="upgradeEffectsTab"></div>
+          <div id="sellEffectsTab"></div>
+        </div>
+        <div id="comingSoonTab" class="equipmentTab">coming soon</div>
       </div>
     </div>
 
+    <!-- Container when clicking the bounties button -->
+    <div id="bountiesContainerMenu" class="menu" hidden inert>
+      <div id="bountiesTitle">
+        <div id="bountiesTitleText">BOUNTIES</div>
+        <div id="bountiesCloseButton">
+          <p>X</p>
+        </div>
+      </div>
+      <div id="bountiesMenu">
+        <div id="dailyBounties">
+          <div id="dailyBounty1"></div>
+          <div id="dailyBounty2"></div>
+          <div id="dailyBounty3"></div>
+          <div id="resetBounties"></div>
+        </div>
+        <div id="mapBounties">
+          <div id="mapTypeBountyButtons"></div>
+          <div id="classicMapMenu"></div>
+          <div id="specialMapMenu"></div>
+        </div>
+        <div id="rewardBounties">
+          <div id="rewardTypeButtons"></div>
+          <div id="generalRewardMenu"></div>
+          <div id="perkRewardMenu"></div>
+        </div>
+      </div>
 
+    </div>
 
+    <!-- Container when clicking donate button (send to ext link prob so idk) not rn-->
+     <div id="donateContainerMenu" class="menu" hidden inert></div>
 
+    <!-- Container when clicking other button -->
+     <!-- this sends to other main menus so idk -->
+     <div id="otherContainerMenu" class="menu" hidden inert></div>
   </body>
   <!-- Eruda script goes first because it needs to load the console -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
