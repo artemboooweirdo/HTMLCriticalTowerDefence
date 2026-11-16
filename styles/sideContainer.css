@@ -6,30 +6,72 @@
   top: 50%;
   grid-template-rows: repeat(4, minmax(0, 1fr));
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  border: 5px solid #000000;
+  /* border: 5px solid #000000; */
   height: auto;
   width: auto;
   gap: 4vh;
   margin-left: 1vw;
   transform: translateY(-65%);
+  padding: 10px;
 }
 
-#sideContainer div {
-  display: flex;
-  height: 10vh;
-  width: 10vh;
-  border: 5px dotted #000000;
-  border-radius: 5px;
+
+#sideContainer > div {
+  position: relative;
+  height: 13vh;
+  width: 13vh;
+  border: 5px solid #000000;
+  border-radius: 9px;
+  text-align: center;
 }
 
-#sidecontainer p {
-  font-family: 'UIFont', serif;
+
+/* All equipment button stuff */
+
+#eqiupmentButton {
+  background-color: #b16100;
+}
+#equipmentButton::before {
+  background-color: #3b2000;
+}
+#equipmentLabel {
+  font-size: 2.3vh;
+}
+
+/* All bounty button stuff */
+
+#bountiesButton {
+  background-color: #cd9403;
+}
+
+#bountiesButton::before {
+  background-color: #3b2000;
+}
+
+#bountiesLabel {
+  font-size: 2.6vh;
+}
+
+/* All equipment button stuff */
+
+
+#donateLabel {
+  font-size: 2.9vh;
+}
+#otherLabel {
+  font-size: 3.6vh;
+}
+
+
+
+
+#sideContainer > div p {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 8cqmin;
-  text-align: center;
+  font-family: 'UIFont', serif;
+  margin: 0;
   white-space: nowrap;
 }
 

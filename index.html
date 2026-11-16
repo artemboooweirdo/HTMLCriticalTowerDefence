@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./styles/sideContainer.css" />
     <link rel="stylesheet" href="./styles/loadingScreen.css" />
     <link rel="stylesheet" href="./styles/playerInfo.css" />
+    <link rel="stylesheet" href="./styles/mapMenu.css" />
   </head>
   <body>
     <!-- Loading Screen on startup -->
@@ -44,11 +45,11 @@
 
     <!-- Place a tower button -->
     <!-- MAKE THIS SO THAT THE BUTTONS ARE IN THE ACTUAL GAME -->
-    <button id="placeTower">Place a Blaster</button>
+    <button id="placeTower" hidden inert>Place a Blaster</button>
 
     <!-- Game Container -->
     <!-- This is the game canvas and the stuff on the side like the glow -->
-    <div id="gameContainer">
+    <div id="gameContainer" hidden inert>
       <canvas id="gameCanvas" height="720px" width="1200px"></canvas>
       <div class="settingsContainer">
         <p id="settingsTitle">Settings</p>
@@ -128,19 +129,19 @@
     <div id="sideContainer">
       <div id="equipmentButton">
         <img />
-        <p>Equipment</p>
+        <p id="equipmentLabel">Equipment</p>
       </div>
       <div id="bountiesButton">
         <img />
-        <p>Bounties</p>
+        <p id="bountiesLabel">Bounties</p>
       </div>
       <div id="donateButton">
         <img />
-        <p>Donate</p>
+        <p id="donateLabel">Donate</p>
       </div>
       <div id="otherButton">
         <img />
-        <p>Other</p>
+        <p id="otherLabel">Other</p>
       </div>
     </div>
 
@@ -160,7 +161,7 @@
         <div class="equipmentTab" id="equipmentTab1">Towers</div>
         <div class="equipmentTab" id="equipmentTab2">Perks</div>
         <div class="equipmentTab" id="equipmentTab3">Cosmetics</div>
-        <div class="equipmentTab" id="equipmentTab">coming soon</div>
+        <div class="equipmentTab" id="equipmentTab4">coming soon</div>
       </div>
       <div id="equipmentMenu">
         <div id="towerTab" class="equipmentTab">
@@ -257,11 +258,32 @@
     </div>
 
     <!-- Container when clicking donate button (send to ext link prob so idk) not rn-->
-     <div id="donateContainerMenu" class="menu" hidden inert></div>
+     <div id="donateContainerMenu" class="menu" hidden inert>donate pls</div>
 
     <!-- Container when clicking other button -->
-     <!-- this sends to other main menus so idk -->
-     <div id="otherContainerMenu" class="menu" hidden inert></div>
+    <!-- this sends to other main menus so idk -->
+    <div id="otherContainerMenu" class="menu" hidden inert></div>
+
+    <div id="playButton">Play</div>
+
+    <div id="mapMenuContainer" class="menu" hidden inert>
+      <!-- Use the lefts and rights later -->
+      <!-- yay stuff to do -->
+      <div id="mapmenuLeft" hidden inert>&lt;</div>
+      <div id="mapmenuRight" hidden inert>&gt;</div>
+
+      <div id="easyMaps" class="mapMenu">
+        <div id="grassland" class="map">Grassland</div>
+        <div id="spookyGrassland" class="map">Spooky Grassland</div>
+        <div id="cemeterySeason" class="map">Cemetery Season</div>
+      </div>
+      <div id="mediumMaps" class="mapMenu" hidden inert></div>
+      <div id="hardMaps" class="mapMenu" hidden inert></div>
+      <div id="quiteHardMaps" class="mapMenu" hidden inert></div>
+      <div id="extremeMaps" class="mapMenu" hidden inert></div>
+    </div>
+
+
   </body>
   <!-- Eruda script goes first because it needs to load the console -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>

@@ -1,0 +1,50 @@
+#mapMenuContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid #000000;
+  background-color: #23e497;
+  padding: 2vh;
+}
+
+#easyMaps, #mediumMaps, #hardMaps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 2vw;
+  width: 100%;
+  height: 100%;
+}
+#grassland {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    background-image: url('../assets/images/bg/grassland.png');
+    background-size: cover;
+    background-position: center;
+    border: 5px solid #000000;
+    border-radius: 10px;
+}
+#spookyGrassland {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    background-image: url('../assets/images/bg/spookyGrassland.png');
+    background-size: cover;
+    background-position: center;
+    border: 5px solid #000000;
+    border-radius: 10px;
+}
+#cemeterySeason {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    background-image: url('../assets/images/bg/cemeterySeason.png');
+    background-size: cover;
+    background-position: center;
+    border: 5px solid #000000;
+    border-radius: 10px;
+}

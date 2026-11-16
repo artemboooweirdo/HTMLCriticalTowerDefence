@@ -35,24 +35,20 @@ loadCustomFont();
 
 // spawnButton and the spawnInput dorpdown menu (I realized i misspelled dropdown)
 // All of the DOM elements that i am using
-const playButton = document.getElementById("playButton");
-const towersButton = document.getElementById("towersButton");
-const perksButton = document.getElementById("perksButton");
-const backButton = document.getElementById("backButton");
-const settingsButton = document.getElementById("settingsButton");
 const menuContainer = document.getElementById("menuContainer");
-const gameMenu = document.getElementById("gameMenu");
-const towerButton = document.getElementById("placeTower");
 const glowSelector = document.getElementById("glowSelector");
-const grassland = document.getElementById("grassland");
-const spookyGrassland = document.getElementById("spookyGrassland");
-const mainMenu = document.getElementById("mainMenu");
+
+const towerButton = document.getElementById("placeTower");
 const gameContainer = document.getElementById("gameContainer");
+
 const gameCanvas = document.getElementById("gameCanvas");
+const loadingScreen = document.getElementById("loadingScreen");
 const loadingText = document.getElementById("loadingText");
 const mapButtons = document.querySelectorAll(".map");
-const leftButton = document.getElementById("leftButton");
-const rightButton = document.getElementById("rightButton");
+const playButton = document.getElementById("playButton");
+const mapMenuContainer = document.getElementById("mapMenuContainer");
+const playerInfoContainer = document.getElementById("playerInfoContainer");
+const sideContainer = document.getElementById("sideContainer");
 
 
 
@@ -89,7 +85,7 @@ const equippedTowers = []; // Array to hold equipped towers
 const equippedPerks = []; // Array to hold equipped perks
 let currentGame = null;
 let currentMenu = "main"; // Possible values: "main", "towers", "perks", "settings"
-const canvas = document.getElementById("gameCanvas");
+const canvas = gameCanvas;
 // Main Game Loop
 function gameLoop(timestamp) {
 
@@ -205,32 +201,39 @@ glowSelector.addEventListener("change", (e) => {
 }});
 
 // Event listeners for menu stuffs
-
-
 mapButtons.forEach(button => {
   button.addEventListener("click", () => {
     const mapId = button.id;
     console.log(`Map selected: ${mapId}`);
     button.setAttribute('disabled', ''); // Disable the button to prevent multiple clicks
     button.style.opacity = '0.5'; // Visual feedback for disabled button
-    // Here you can add logic to load the selected map into the game
+
     const bgImage = new Image();
     bgImage.src = `./assets/images/bg/${mapId}.png`;
     bgImage.onload = () => {
 
+      hidert(mapMenuContainer);
+      hidert(playerInfoContainer);
+      hidert(sideContainer);
       unhidert(towerButton);
-      towerButton.style.visibility = "visible";
-      gameCanvas.style.visibility = "visible";
-
-      hidert(menuContainer);
       unhidert(gameContainer);
-      gameContainer.style.visibility = "visible";
-      gameContainer.style.display = "block"; // Show the game container
       currentGame = new Game(document.getElementById("gameCanvas"), maps[mapId], bgImage);
-      currentGame.queueEnemies(enemyLayouts.normalEnemies);
+      if (mapId !== "cemeterySeason") {
+        currentGame.queueEnemies(enemyLayouts.normalEnemies);
+      } else {
+        currentGame.queueEnemies(enemyLayouts.cemeterySeasonEnemies);
+      }
       currentGame.spawnEnemiesForRound(0);
       currentGame.roundTimes[0].start();
       requestAnimationFrame(gameLoop);  
     };
   });
+});
+
+
+// When play button is clicked 
+playButton.addEventListener("click", () => {
+  // Hide play button and show map selection
+  hidert(playButton);
+  unhidert(mapMenuContainer);
 });

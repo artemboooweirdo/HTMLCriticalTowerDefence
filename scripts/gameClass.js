@@ -189,7 +189,7 @@ export default class Game {
     this.ctx.scale(this.zoom, this.zoom);
   }
   drawBGImage() {
-    this.ctx.drawImage(this.bgImage, 0 + this.xOffset, 0 + this.yOffset, this.canvas.width, this.canvas.height);
+    this.ctx.drawImage(this.bgImage, 0 + this.xOffset, 0 + this.yOffset, this.bgImage.width, this.bgImage.height);
   }
   drawEnemies() { 
     this.currentEnemies.forEach((enemy) => {

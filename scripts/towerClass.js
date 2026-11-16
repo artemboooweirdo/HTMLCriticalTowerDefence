@@ -1,3 +1,8 @@
+// rework this to make it so that each tower has its own class
+// also, make sure that all of the tower classes are in a tower folder
+// so that I can code in special abilities for each tower cause idk i just want to
+// WEEK 5 IS COMPLETE YAY signing off Artem B 11/25/2026 bai :P
+
 export default class Tower {
     constructor(template, xPos, yPos) {
         this.cooldown = 0;
