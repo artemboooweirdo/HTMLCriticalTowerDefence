@@ -19,6 +19,7 @@ export default class Projectile {
 
         this.removal = false;
     }
+    // Update the projectiles location
     update(deltaTime) {
         if (this.distanceLeft <= 0) {
             this.removal = true;

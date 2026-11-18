@@ -7,13 +7,25 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Start The TD!</title>
+      <link rel="icon" type="image/png" href="./assets/images/towerSprites/blaster.webp" />
+
+
     <link rel="stylesheet" href="./styles/style.css" />
     <link rel="stylesheet" href="./styles/sideContainer.css" />
     <link rel="stylesheet" href="./styles/loadingScreen.css" />
     <link rel="stylesheet" href="./styles/playerInfo.css" />
     <link rel="stylesheet" href="./styles/mapMenu.css" />
+    <link rel="stylesheet" href="./styles/equipmentMenu.css" />
+
+    <link rel="preload" href="./assets/images/decals/equipment.webp" as="image" />
+    <link rel="preload" href="./assets/images/decals/bounties.webp" as="image" />
+
   </head>
   <body>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>
+      eruda.init();
+    </script>
     <!-- Loading Screen on startup -->
     <div id="loadingScreen">
       <div id="loadingText">Loading</div>
@@ -128,20 +140,20 @@
     <!-- say thank you to sideContainer -->
     <div id="sideContainer">
       <div id="equipmentButton">
-        <img />
-        <p id="equipmentLabel">Equipment</p>
+          <img src="./assets/images/decals/equipment.webp" alt="Equipment" class="decal"/>
+          <p id="equipmentLabel">Equipment</p>
       </div>
       <div id="bountiesButton">
-        <img />
-        <p id="bountiesLabel">Bounties</p>
+          <img src="./assets/images/decals/bounties.webp" alt="Bounties" class="decal"/>
+          <p id="bountiesLabel">Bounties</p>
       </div>
       <div id="donateButton">
-        <img />
-        <p id="donateLabel">Donate</p>
+          <img />
+          <p id="donateLabel">Donate</p>
       </div>
       <div id="otherButton">
-        <img />
-        <p id="otherLabel">Other</p>
+          <img />
+          <p id="otherLabel">Other</p>
       </div>
     </div>
 
@@ -286,12 +298,6 @@
 
   </body>
   <!-- Eruda script goes first because it needs to load the console -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>
-    eruda.init();
-  </script>
   <!-- Rest of scripts -->
-  <script type="module" src="./scripts/enemyTemplates.js"></script>
-  <script type="module" src="./scripts/enemyClass.js"></script>
   <script type="module" src="./scripts/script.js"></script>
 </html>

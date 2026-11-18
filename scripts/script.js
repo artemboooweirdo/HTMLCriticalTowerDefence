@@ -53,16 +53,18 @@ const sideContainer = document.getElementById("sideContainer");
 
 
 // Test for fitting text into tower thingys
-
-const equippedTowerTexts = document.querySelectorAll(".equippedTower div");
-equippedTowerTexts.forEach((text) => {
-  let currentFontSize = parseFloat(window.getComputedStyle(text).fontSize);
-  while (text.scrollWidth > text.clientWidth) {
-    text.style.fontSize = `${currentFontSize - 1}px`;
+function fitTextToContainer(textElement) {
+  let currentFontSize = parseFloat(window.getComputedStyle(textElement).fontSize);
+  while (textElement.scrollWidth > textElement.clientWidth) {
+    textElement.style.fontSize = `${currentFontSize - 1}px`;
     currentFontSize -= 1;
   }
-  // Move below so that on hover it pops up for the user to see the full name of the tower
-});
+}
+const equippedTowerTexts = document.querySelectorAll(".equippedTower div");
+equippedTowerTexts.forEach((text) => {
+  fitTextToContainer(text);
+  }
+);
 
 
 
@@ -108,31 +110,15 @@ function gameLoop(timestamp) {
 // Other stuff such as event listeners and such
 
 // On page load, hide the loading screen after a short delay to ensure all assets are loaded
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
   loadingText.textContent = "Done!";
   setTimeout(() => {
-    loadingScreen.style.visibility = "hidden";
+    loadingScreen.hidden = true;
     loadingScreen.setAttribute('inert', '');
   }, 1000); // Adjust the delay as needed
 });
 
 
-
-
-towerButton.addEventListener("click", () => {
-  console.log("Tower button clicked");
-  if (!currentGame) {
-    console.log("Game not started. Click 'Start Game' first.");
-    return;
-  }
-  if (currentGame.selectedTower) {
-    currentGame.placingTowerCancel();
-    console.log("Tower placement canceled");
-  } else {
-    currentGame.placingTowerStart(new Tower(towerTemplates.blaster));
-    console.log("Tower placement started");
-  }
-});
 
 // FULLY WORKS (returns the x and y based on the canvas)
 canvas.addEventListener("mousemove", (e) => {
@@ -217,7 +203,7 @@ mapButtons.forEach(button => {
       hidert(sideContainer);
       unhidert(towerButton);
       unhidert(gameContainer);
-      currentGame = new Game(document.getElementById("gameCanvas"), maps[mapId], bgImage);
+      currentGame = new Game(document.getElementById("gameCanvas"), maps[mapId], bgImage, ["blaster"], ["crimsomCatseyeRipoff"]);
       if (mapId !== "cemeterySeason") {
         currentGame.queueEnemies(enemyLayouts.normalEnemies);
       } else {
@@ -236,4 +222,13 @@ playButton.addEventListener("click", () => {
   // Hide play button and show map selection
   hidert(playButton);
   unhidert(mapMenuContainer);
+});
+
+
+// On window resize, refit text inside the tower thingies
+window.addEventListener("resize", () => {
+  // So that it refits the text when the window is resized
+  equippedTowerTexts.forEach((text) => {
+    fitTextToContainer(text);
+  });
 });

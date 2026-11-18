@@ -1,22 +1,28 @@
-'use strict';
-
+"use strict";
 
 const dummySprite = new Image();
-dummySprite.src = "./assets/images/sprites/dummy.png"
+dummySprite.src = "./assets/images/sprites/dummy.png";
 import Enemy from "./enemyClass.js";
 import Projectile from "./projectileClass.js";
 import projectileTemplates from "./projectileTemplates.js";
+import GameRenderer from "./gameRendererClass.js";
 
 let idCounter = 0;
 
-
 // IMPLEMENT THIS
 export default class Game {
-  constructor(canvas, map, backgroundImage) {
+  constructor(canvas, map, backgroundImage, equippedTowers, equippedPerks) {
+    // This renderer replaces the drawing functions in this class.
+    // It is used to draw the game in the class rather than in the game class
+
+    this.renderer = new GameRenderer(canvas, backgroundImage);
+
+    this.bgImage = backgroundImage;
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.map = map;
 
+    this.waves = new WaveManager(map.waveData);
     this.round = 0;
     this.timeleft = 0;
 
@@ -34,7 +40,6 @@ export default class Game {
     this.lastTime = null;
     this.deltaTime = null;
 
-    this.bgImage = backgroundImage;
 
     this.cursorPos = { x: 0, y: 0 };
 
@@ -54,167 +59,196 @@ export default class Game {
     this.towerMenu = null;
 
     this.gameState = "playing";
+
+    this.restrictedAreas = [];
+    this.showRestrictedAreas = false;
+
+    this.equippedTowers = equippedTowers;
+    this.equippedPerks = equippedPerks;
+
   }
   update(timestamp) {
-
-  if (this.lastTime === null) {
+    // Calculate deltaTime for the game
+    // and set up for next deltaTime calculation
+    if (this.lastTime === null) {
+      this.lastTime = timestamp;
+    }
+    this.deltaTime = timestamp - this.lastTime;
     this.lastTime = timestamp;
-  }
-  this.deltaTime = timestamp - this.lastTime;
-  this.lastTime = timestamp;
 
+    // Calculate the camera offset
+    this.xOffset += this.dxOffset * this.deltaTime;
+    this.yOffset += this.dyOffset * this.deltaTime;
 
-  // Calculate the camera offset
-  this.xOffset += this.dxOffset * (1000/60);
-  this.yOffset += this.dyOffset * (1000/60);
-
-  // Update the alert
-  if (this.alert) {
-    this.alertAlpha -= 0.01;
-    if (this.alertAlpha <= 0) {
-      this.alert = null;
+    // Update the alert
+    // Make it fade out over time if it exists
+    if (this.alert) {
+      this.alertAlpha -= 0.01;
+      if (this.alertAlpha <= 0) {
+        this.alert = null;
+      }
     }
-  }
 
-  // Timer stuff like starting new rounds
-  const timer = this.roundTimes[this.round];
-  if (!timer) {
-    console.log("All waves complete");
-    return;
-  }
-  timer.update();
-      if (timer.getTime() <= 0) {
-    this.round++;
-
-    if (this.round < this.roundTimes.length) {
-      this.spawnEnemiesForRound(this.round);
-      this.roundTimes[this.round].start();
-    } else {
+    // Make a timer for the current round
+    const timer = this.roundTimes[this.round];
+    // If the timer dosent exist, all the waves are over.
+    if (!timer) {
       console.log("All waves complete");
+      return;
     }
-  }
-  // Timer stuff
+    // Update the timer and check if the round is over
+    timer.update();
 
-  //Handles Enemy Damage 
+    // If the timer ended, start the next rounds timer
+    if (timer.getTime() <= 0) {
+      this.round++;
 
-  this.towers.forEach((tower) => {
-    const attackableEnemies = this.currentEnemies.filter((enemy) => tower.isInRange(enemy));
-    if (attackableEnemies.length > 0) {
-      let targetEnemy;
-      // Finds the target enemy based on its targeting
-      switch (tower.targeting) {
-        case "first":
-          targetEnemy = attackableEnemies.reduce((first, enemy) => {
-            return enemy.totalDistance > first.totalDistance ? enemy : first;
-          });
-          break;
-        case "last":
-          targetEnemy = attackableEnemies.reduce((last, enemy) => {
-            return enemy.totalDistance < last.totalDistance ? enemy : last;
-          });
-          break;
-        case "strongest":
-          targetEnemy = attackableEnemies.reduce((strongest, enemy) => {
-            return enemy.health > strongest.health ? enemy : strongest;
-          });
-          break;
-        case "weakest":
-          targetEnemy = attackableEnemies.reduce((weakest, enemy) => {
-            return enemy.health < weakest.health ? enemy : weakest;
-          });
-          break;
-        default:
-          targetEnemy = attackableEnemies[0];
+      if (this.round < this.roundTimes.length) {
+        this.spawnEnemiesForRound(this.round);
+        this.roundTimes[this.round].start();
+      } else {
+        console.log("All waves complete");
       }
-      const targetEnemyHp = this.currentEnemies[this.currentEnemies.findIndex((enemy) => enemy.id === targetEnemy.id)].health;
-      const newHealth = tower.attack(targetEnemy, this.deltaTime);
-      if (newHealth < targetEnemyHp) {
-        console.log(`Tower attacked enemy ${targetEnemy.id} for ${targetEnemyHp - newHealth} damage`);
-        targetEnemy.health = newHealth;
-        this.projectiles.push(new Projectile(projectileTemplates.bullet, tower, targetEnemy));
-      }
-      
     }
-  });
 
-  this.projectiles.forEach((projectile) => {
-    projectile.update(this.deltaTime);
+    
+    //Handles Enemy Damage (Attacks later)
+    this.towers.forEach((tower) => {
+      const attackableEnemies = this.currentEnemies.filter((enemy) =>
+        tower.isInRange(enemy),
+      );
+      if (attackableEnemies.length > 0) {
+        let targetEnemy;
+        // Finds the target enemy based on its targeting
+        switch (tower.targeting) {
+          case "first":
+            targetEnemy = attackableEnemies.reduce((first, enemy) => {
+              return enemy.totalDistance > first.totalDistance ? enemy : first;
+            });
+            break;
+          case "last":
+            targetEnemy = attackableEnemies.reduce((last, enemy) => {
+              return enemy.totalDistance < last.totalDistance ? enemy : last;
+            });
+            break;
+          case "strongest":
+            targetEnemy = attackableEnemies.reduce((strongest, enemy) => {
+              return enemy.health > strongest.health ? enemy : strongest;
+            });
+            break;
+          case "weakest":
+            targetEnemy = attackableEnemies.reduce((weakest, enemy) => {
+              return enemy.health < weakest.health ? enemy : weakest;
+            });
+            break;
+          default:
+            targetEnemy = attackableEnemies[0];
+        }
+        const targetEnemyHp =
+          this.currentEnemies[
+            this.currentEnemies.findIndex(
+              (enemy) => enemy.id === targetEnemy.id,
+            )
+          ].health;
+        const newHealth = tower.attack(targetEnemy, this.deltaTime);
+        if (newHealth < targetEnemyHp) {
+          console.log(
+            `Tower attacked enemy ${targetEnemy.id} for ${targetEnemyHp - newHealth} damage`,
+          );
+          targetEnemy.health = newHealth;
+          this.projectiles.push(
+            new Projectile(projectileTemplates.bullet, tower, targetEnemy),
+          );
+        }
+      }
     });
-      
 
+    // Updates projectiles
+    this.projectiles.forEach((projectile) => {
+      projectile.update(this.deltaTime);
+    });
 
     // Handles death of enemies
-  for (let i = this.currentEnemies.length - 1; i >= 0; i--) {
-    if (i < 0) {
-      console.log("No enemies");
-      break;
+    for (let i = this.currentEnemies.length - 1; i >= 0; i--) {
+      if (i < 0) {
+        console.log("No enemies");
+        break;
+      }
+      if (this.currentEnemies[i].health <= 0) {
+        this.currentEnemies.splice(i, 1);
+        console.log(`Enemy at index ${i} died`);
+      }
     }
-    if (this.currentEnemies[i].health <= 0) {
-      this.currentEnemies.splice(i, 1);
-      console.log(`Enemy at index ${i} died`);
+    // When the enemy reaches the base
+    for (let i = this.currentEnemies.length - 1; i >= 0; i--) {
+      if (i < 0) {
+        console.log("No enemies");
+        throw new Error("No enemies");
+      }
+      // Calculates the movement of the enemies
+      this.currentEnemies[i].calcMovement(this.deltaTime);
+      this.currentEnemies[i].checkTarget();
+
+      // enemy reaches base
+      if (
+        this.currentEnemies[i].yPos == this.currentEnemies[i].finish.y &&
+        this.currentEnemies[i].xPos == this.currentEnemies[i].finish.x
+      ) {
+        console.log(this.currentEnemies[i]);
+        this.baseHp -= this.currentEnemies[i].health;
+        console.log(
+          `deleted enemy at ${i} it had ${this.currentEnemies[i].health} hp`,
+        );
+        console.log(`you now have ${this.baseHp} hp left`);
+        this.currentEnemies.splice(i, 1);
+      }
     }
   }
-  // When the enemy reaches the base
-  for (let i = this.currentEnemies.length - 1; i >= 0; i--) {
-    if (i < 0) {
-      console.log("No enemies");
-      throw new Error("No enemies");
-    }
-    // Calculates the movement of the enemies
-    this.currentEnemies[i].calcMovement(this.deltaTime);
-    this.currentEnemies[i].checkTarget();
-
-    // enemy reaches base
-    if (
-      this.currentEnemies[i].yPos == this.currentEnemies[i].finish.y &&
-      this.currentEnemies[i].xPos == this.currentEnemies[i].finish.x
-    ) {
-      console.log(this.currentEnemies[i]);
-      this.baseHp -= this.currentEnemies[i].health;
-      console.log(
-        `deleted enemy at ${i} it had ${this.currentEnemies[i].health} hp`,
-      );
-      console.log(`you now have ${this.baseHp} hp left`);
-      this.currentEnemies.splice(i, 1);
-    }
-  }
-
-
-
-  }
+  // Clears canvas
   clearCanvas() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.scale(this.zoom, this.zoom);
   }
+  // Draws the bg image (1st layer)
   drawBGImage() {
-    this.ctx.drawImage(this.bgImage, 0 + this.xOffset, 0 + this.yOffset, this.bgImage.width, this.bgImage.height);
+    this.ctx.drawImage(
+      this.bgImage,
+      0 + this.xOffset,
+      0 + this.yOffset,
+      this.bgImage.width,
+      this.bgImage.height,
+    );
   }
-  drawEnemies() { 
+  // Draws all enemies
+  drawEnemies() {
     this.currentEnemies.forEach((enemy) => {
       this.ctx.fillStyle = enemy.type;
       this.ctx.fillRect(
-        enemy.xPos - 20  + this.xOffset,
-        enemy.yPos - 20  + this.yOffset,
+        enemy.xPos - 20 + this.xOffset,
+        enemy.yPos - 20 + this.yOffset,
         40,
         40,
       );
       this.ctx.font = `${15}px UIFont`;
       this.ctx.lineWidth = 1;
       this.ctx.strokeText(
-      enemy.health,
-      enemy.xPos - 10  + this.xOffset,
-      enemy.yPos - 10  + this.yOffset,
+        enemy.health,
+        enemy.xPos - 10 + this.xOffset,
+        enemy.yPos - 10 + this.yOffset,
       );
       this.ctx.fillStyle = "#0000ff";
       this.ctx.fillText(
-      enemy.health,
-      enemy.xPos - 10 + this.xOffset,
-      enemy.yPos - 10 + this.yOffset,
+        enemy.health,
+        enemy.xPos - 10 + this.xOffset,
+        enemy.yPos - 10 + this.yOffset,
       );
     });
   }
+
+
+  // Draws all placed towers
   drawPlacedTowers() {
     this.towers.forEach((tower) => {
       this.ctx.fillStyle = "#000000";
@@ -234,14 +268,15 @@ export default class Game {
       );
     });
   }
-  drawSelectedTower() { 
+  drawSelectedTower() {
     // And its range
     if (this.selectedTower) {
       this.ctx.beginPath();
       this.ctx.arc(
         this.cursorPos.x,
         this.cursorPos.y,
-        (this.selectedTower.range + this.selectedTower.range * this.selectedTower.rangeBuff / 100),
+        this.selectedTower.range +
+          (this.selectedTower.range * this.selectedTower.rangeBuff) / 100,
         0,
         2 * Math.PI,
       );
@@ -272,19 +307,15 @@ export default class Game {
       //Draw Selected Tower
       if (this.selectedTower) {
         this.ctx.fillStyle = "#000000";
-        this.ctx.fillRect(
-          this.cursorPos.x - 10,
-          this.cursorPos.y - 10,
-          20,
-          20,
-        );
+        this.ctx.fillRect(this.cursorPos.x - 10, this.cursorPos.y - 10, 20, 20);
       }
     }
   }
-  drawHpBar() { 
+  // Draw all UI after this (stuff that dosent change pos)
+  drawHpBar() {
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(298, 0, 404, 40);
-    this.ctx.fillStyle = "#00ff00"
+    this.ctx.fillStyle = "#00ff00";
     this.ctx.strokeStyle = "#000000";
     this.ctx.fillRect(300, 2, this.baseHp * 4, 36);
   }
@@ -296,15 +327,15 @@ export default class Game {
     this.ctx.fillStyle = "#a007d8";
     this.ctx.fillText(this.baseHp, 300, 0);
 
-      // draw time left
+    // draw time left
     this.ctx.font = "14px UIFont";
-    this.ctx.fillStyle = "#000000"
+    this.ctx.fillStyle = "#000000";
     const timer = this.roundTimes[this.round];
     const timeLeft = timer ? timer.getTime().toFixed(0) : "You Win!";
     if (timeLeft == "You Win!") {
       this.alert = "You Win!";
     }
-    this.ctx.fillText(`Time left: ${timeLeft}`, 300, 40); 
+    this.ctx.fillText(`Time left: ${timeLeft}`, 300, 40);
   }
   drawProjectiles() {
     // Removing projectiles here so that i dont have to use foreach
@@ -314,15 +345,22 @@ export default class Game {
       }
     }
     this.projectiles.forEach((projectile) => {
-
       //Saves the current state of the canvas
       this.ctx.save();
-      this.ctx.translate(projectile.xPos + this.xOffset, projectile.yPos + this.yOffset);
+      this.ctx.translate(
+        projectile.xPos + this.xOffset,
+        projectile.yPos + this.yOffset,
+      );
       this.ctx.rotate(projectile.rotation);
 
       if (projectile.type === "rect") {
         this.ctx.fillStyle = this.glow;
-        this.ctx.fillRect(-projectile.width / 2, -projectile.height / 2, projectile.width / 2, projectile.height / 2);
+        this.ctx.fillRect(
+          -projectile.width / 2,
+          -projectile.height / 2,
+          projectile.width / 2,
+          projectile.height / 2,
+        );
       } else if (projectile.type === "circle") {
         this.ctx.fillStyle = this.glow;
         this.ctx.beginPath();
@@ -339,6 +377,17 @@ export default class Game {
       this.ctx.fillText(this.alert, 0, 670);
     }
   }
+  drawEquippedTowers() {
+    this.ctx.fillStyle = "#000000";
+    for (let i = 0; i < 6; i++) {
+      this.ctx.roundRect(0 + (i* 50), 670, 50, 50, 5);
+      this.ctx.fill();
+    }
+    // Draw the equipped towers
+  }
+
+
+  // Draws the entire game
   draw() {
     // Draw the map background image
 
@@ -351,24 +400,28 @@ export default class Game {
 
     //Draw hovered tower range
     this.towers.forEach((tower) => {
-      if (Math.hypot(this.cursorPos.x - tower.xPos - this.xOffset, this.cursorPos.y - tower.yPos - this.yOffset) <= 20) {
-
-      this.ctx.beginPath();
-      this.ctx.arc(
-        tower.xPos + this.xOffset,
-        tower.yPos + this.yOffset,
-        (tower.range + tower.range * tower.rangeBuff / 100),
-        0,
-        2 * Math.PI,
-      );
-      this.ctx.strokeStyle = "#000000";
-      this.ctx.lineWidth = 2;
-      this.ctx.stroke();
-      this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
-      this.ctx.fill();
-    }
+      if (
+        Math.hypot(
+          this.cursorPos.x - tower.xPos - this.xOffset,
+          this.cursorPos.y - tower.yPos - this.yOffset,
+        ) <= 20
+      ) {
+        this.ctx.beginPath();
+        this.ctx.arc(
+          tower.xPos + this.xOffset,
+          tower.yPos + this.yOffset,
+          tower.range + (tower.range * tower.rangeBuff) / 100,
+          0,
+          2 * Math.PI,
+        );
+        this.ctx.strokeStyle = "#000000";
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+        this.ctx.fillStyle = "rgba(11, 113, 223, 0.64)";
+        this.ctx.fill();
+      }
     });
-    
+
     //Draw Towers
     this.drawPlacedTowers();
 
@@ -377,7 +430,6 @@ export default class Game {
 
     // Draw the selected tower and its range
     this.drawSelectedTower();
-
 
     //Make these scaled normally
 
@@ -391,7 +443,6 @@ export default class Game {
 
     // Draw Alert
     this.drawAlert();
-    
   }
 
   queueEnemies(enemies) {
@@ -400,7 +451,9 @@ export default class Game {
   }
   spawnEnemiesForRound(round) {
     this.round = round;
-    const roundEnemies = this.queuedEnemies.filter(enemy => enemy.round === round);
+    const roundEnemies = this.queuedEnemies.filter(
+      (enemy) => enemy.round === round,
+    );
     roundEnemies.forEach((enemy) => {
       setTimeout(() => {
         enemy.id = idCounter++;

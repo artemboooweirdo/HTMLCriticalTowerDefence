@@ -1,78 +1,112 @@
 /* Side Menu */
 #sideContainer {
-  position: absolute;
-  display: grid;
-  left: 0;
-  top: 50%;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  /* border: 5px solid #000000; */
-  height: auto;
-  width: auto;
-  gap: 4vh;
-  margin-left: 1vw;
-  transform: translateY(-65%);
-  padding: 10px;
+    position: absolute;
+    display: grid;
+    left: 0;
+    top: 50%;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    /* border: 5px solid #000000; */
+    height: auto;
+    width: auto;
+    gap: 4vh;
+    margin-left: 1vw;
+    transform: translateY(-65%);
+    padding: 10px;
 }
-
 
 #sideContainer > div {
-  position: relative;
-  height: 13vh;
-  width: 13vh;
-  border: 5px solid #000000;
-  border-radius: 9px;
-  text-align: center;
+    position: relative;
+    height: 13vh;
+    width: 13vh;
+    border-radius: 9px;
+    text-align: center;
+    z-index: 1;
 }
 
+
+.decal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    filter: brightness(0);
+}
 
 /* All equipment button stuff */
 
-#eqiupmentButton {
-  background-color: #b16100;
+#equipmentButton {
+    background-color: #945710;
+    box-shadow: 0 8px 0 #1d0f00;
 }
-#equipmentButton::before {
-  background-color: #3b2000;
-}
+#equipmentButton:active {
+  position: relative;
+  top: 4px;
+  box-shadow: 0 4px 0 #1d0f00;
+}   
+
 #equipmentLabel {
-  font-size: 2.3vh;
+    font-size: 2.3vh;
 }
 
 /* All bounty button stuff */
 
 #bountiesButton {
-  background-color: #cd9403;
+    background-color: #cd9403;
+    box-shadow: 0 8px 0 #1d0f00;
 }
-
-#bountiesButton::before {
-  background-color: #3b2000;
-}
+#bountiesButton:active {
+  position: relative;
+  top: 4px;
+  box-shadow: 0 4px 0 #1d0f00;
+}   
 
 #bountiesLabel {
-  font-size: 2.6vh;
+    font-size: 2.6vh;
 }
 
-/* All equipment button stuff */
+/* All donate button stuff */
 
+#donateButton {
+    background-color: #10740b;
+    box-shadow: 0 8px 0 #1d0f00;
+}
+#donateButton:active {
+  position: relative;
+  top: 4px;
+  box-shadow: 0 4px 0 #1d0f00;
+}   
 
 #donateLabel {
-  font-size: 2.9vh;
+    font-size: 2.9vh;
 }
+
+/* All "other" button stuff */
+
+#otherButton {
+    background-color: #4c4c4c;
+    box-shadow: 0 8px 0 #1d0f00;
+}
+#otherButton:active {
+  position: relative;
+  top: 4px;
+  box-shadow: 0 4px 0 #1d0f00;
+}   
+
 #otherLabel {
-  font-size: 3.6vh;
+    font-size: 3.6vh;
 }
-
-
-
 
 #sideContainer > div p {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'UIFont', serif;
-  margin: 0;
-  white-space: nowrap;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "UIFont", serif;
+    color: #ffffff;
+    -webkit-text-stroke: 0.8px #000000;
+    margin: 0;
+    white-space: nowrap;
 }
-
-/* This is for another day signing off 11:52pm gby gng */
