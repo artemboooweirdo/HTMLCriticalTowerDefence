@@ -1,8 +1,8 @@
 @font-face {
-  font-family: 'UIFont'; /* Give your font a name to reference later */
-  src: url('../assets/ui-font.ttf') format('truetype'); /* Path to the TTF file */
-  font-weight: normal;
-  font-style: normal;
+    font-family: "UIFont"; /* Give your font a name to reference later */
+    src: url("../assets/ui-font.ttf") format("truetype"); /* Path to the TTF file */
+    font-weight: normal;
+    font-style: normal;
 }
 #equipmentContainerMenu {
     position: absolute;
@@ -33,5 +33,4 @@
     grid-column: 1 / 2;
     text-align: center;
     font-size: 2rem;
-
 }
