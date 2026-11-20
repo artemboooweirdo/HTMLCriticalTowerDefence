@@ -158,24 +158,28 @@
     </div>
 
     <!-- Container when clicking the equipment button -->
-    <div id="equipmentContainerMenu" class="menu" hidden inert>
+    <div id="equipmentMenuContainer" class="menu" hidden inert>
+
+      <div id="equipmentCloseButton">
+        <p>X</p>
+      </div>
+
       <div id="equipmentTitle">
         <div id="towerColorsToggle">
           <p>Tower Colors</p>
           <input type="checkbox" id="towerColorsCheckbox" />
         </div>
         <div id="equipmentTitleText">EQUIPMENT</div>
-        <div id="equipmentCloseButton">
-          <p>X</p>
-        </div>
       </div>
+
       <div id="equipmentTabs">
-        <div class="equipmentTab" id="equipmentTab1">Towers</div>
-        <div class="equipmentTab" id="equipmentTab2">Perks</div>
-        <div class="equipmentTab" id="equipmentTab3">Cosmetics</div>
-        <div class="equipmentTab" id="equipmentTab4">coming soon</div>
+        <div class="equipmentTabButton" id="equipmentTab1">Towers</div>
+        <div class="equipmentTabButton" id="equipmentTab2">Perks</div>
+        <div class="equipmentTabButton" id="equipmentTab3">Cosmetics</div>
+        <div class="equipmentTabButton" id="equipmentTab4">coming soon</div>
       </div>
-      <div id="equipmentMenu">
+
+      <div id="equipmentMenus">
         <div id="towerTab" class="equipmentTab">
           <div id="towerPreview">
             <img id="towerPreviewImage" />
@@ -185,58 +189,165 @@
             <div>
               <div>Select a tower to view its info</div>
               <div id="bottomPreviewButtons">
-                <button id="equipTowerButton">Equip</button>
-                <button id="comingSoonButton">Upgrade</button>
+                <div id="equipTowerButton">Equip</div>
+                <div id="comingSoonButton">Upgrade</div>
               </div>
             </div>
           </div>
-
-          <div id="towerList">
-            <div class="towerItem" id="towerItem1">
-              <img
-                src="./assets/images/towerSprites/blaster.webp"
-                alt="Blaster"
-              />
-              <p>Blaster</p>
-            </div>
-            <div class="towerItem" id="towerItem2">
-              <img
-                src="./assets/images/towerSprites/dumpster.webp"
-                alt="Dumpster Fire Ripoff"
-              />
-              <p>Dumpster Fire</p>
-            </div>
-            <div class="towerItem" id="towerItem3">
-              <img
+          <div id="towerListContainer">
+            <div id="towerList">
+              <div class="towerItem" id="towerItem3">
+                <img
                 src="./assets/images/towerSprites/bandit.webp"
                 alt="Bandit"
-              />
-              <p>Bandit</p>
-            </div>
-            <div class="towerItem" id="towerItem4">
-              <img src="./assets/images/towerSprites/thief.webp" alt="Thief" />
-              <p>Thief</p>
-            </div>
-            <div class="towerItem" id="towerItem5">
-              <img
+                />
+                <p>Bandit</p>
+              </div>
+              <div class="towerItem" id="towerItem1">
+                <img
+                src="./assets/images/towerSprites/blaster.webp"
+                alt="Blaster"
+                />
+                <p>Blaster</p>
+              </div>
+              <div class="towerItem" id="towerItem2">
+                <img
+                src="./assets/images/towerSprites/dumpster.webp"
+                alt="Dumpster Fire Ripoff"
+                />
+                <p>Dumpster Fire</p>
+              </div>
+              <div class="towerItem" id="towerItem4">
+                <img src="./assets/images/towerSprites/thief.webp" alt="Thief" />
+                <p>Thief</p>
+              </div>
+              <div class="towerItem" id="towerItem5">
+                <img
                 src="./assets/images/towerSprites/archer.webp"
                 alt="Archer"
-              />
-              <p>Archer</p>
+                />
+                <p>Archer</p>
+              </div>
+              <!-- All of these are filler Items -->
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
+              <div class="towerItem">
+                <p>Longer Text</p>
+              </div>
             </div>
           </div>
         </div>
-        <div id="perksTab" class="equipmentTab">
+        <div id="perksTab" class="equipmentTab" hidden inert>
           <div id="basicPerksButton"></div>
           <div id="slotPerksButton"></div>
           <div id="perkShopButton"></div>
         </div>
-        <div id="cosmeticsTab" class="equipmentTab">
+        <div id="cosmeticsTab" class="equipmentTab" hidden inert>
           <div id="placeEffectsTab"></div>
           <div id="upgradeEffectsTab"></div>
           <div id="sellEffectsTab"></div>
         </div>
-        <div id="comingSoonTab" class="equipmentTab">coming soon</div>
+        <div id="comingSoonTab" class="equipmentTab" hidden inert>coming soon</div>
       </div>
     </div>
 

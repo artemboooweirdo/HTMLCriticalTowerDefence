@@ -92,6 +92,7 @@ body {
   background-color: #2fc800;
   border: 5px solid #000000;
   border-radius: 10px;
+  z-index: -1000;
 }
 
 

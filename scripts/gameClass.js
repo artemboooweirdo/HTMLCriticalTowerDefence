@@ -6,6 +6,7 @@ import Enemy from "./enemyClass.js";
 import Projectile from "./projectileClass.js";
 import projectileTemplates from "./projectileTemplates.js";
 import GameRenderer from "./gameRendererClass.js";
+import WaveManager from "./waveManagerClass.js";
 
 let idCounter = 0;
 
@@ -22,7 +23,7 @@ export default class Game {
     this.ctx = canvas.getContext("2d");
     this.map = map;
 
-    this.waves = new WaveManager(map.waveData);
+    // this.waves = new WaveManager(map.waveData);
     this.round = 0;
     this.timeleft = 0;
 
@@ -380,7 +381,7 @@ export default class Game {
   drawEquippedTowers() {
     this.ctx.fillStyle = "#000000";
     for (let i = 0; i < 6; i++) {
-      this.ctx.roundRect(0 + (i* 50), 670, 50, 50, 5);
+      this.ctx.roundRect(10 + (i * 60), 660, 50, 50, 5);
       this.ctx.fill();
     }
     // Draw the equipped towers
@@ -441,8 +442,11 @@ export default class Game {
     // Draw Misc Text
     this.drawMiscText();
 
+    this.drawEquippedTowers();
+
     // Draw Alert
     this.drawAlert();
+
   }
 
   queueEnemies(enemies) {

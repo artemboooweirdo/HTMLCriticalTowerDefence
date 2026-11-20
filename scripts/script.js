@@ -50,6 +50,9 @@ const mapMenuContainer = document.getElementById("mapMenuContainer");
 const playerInfoContainer = document.getElementById("playerInfoContainer");
 const sideContainer = document.getElementById("sideContainer");
 
+const equipmentButton = document.getElementById("equipmentButton");
+const equipmentMenuContainer = document.getElementById("equipmentMenuContainer");
+const equipmentCloseButton = document.getElementById("equipmentCloseButton");
 
 
 // Test for fitting text into tower thingys
@@ -229,6 +232,23 @@ playButton.addEventListener("click", () => {
 window.addEventListener("resize", () => {
   // So that it refits the text when the window is resized
   equippedTowerTexts.forEach((text) => {
+    text.style.fontSize = "2rem"
     fitTextToContainer(text);
   });
+});
+
+// Event listener for the equipment button
+
+equipmentButton.addEventListener("click", () => {
+  // Toggle menu visibility
+  if (equipmentMenuContainer.hasAttribute('hidden')) {
+    unhidert(equipmentMenuContainer);
+  } else {
+    hidert(equipmentMenuContainer);
+  }
+});
+
+
+equipmentCloseButton.addEventListener("click", () => {
+  hidert(equipmentMenuContainer);
 });
