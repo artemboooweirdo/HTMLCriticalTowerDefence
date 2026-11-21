@@ -24,6 +24,13 @@ body {
   margin: 0;
   box-sizing: border-box;
   overflow: hidden;
+  font-family: "UIFont", sans-serif;
+
+  /* To make the people playing this game not able to select text */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+  -moz-user-select: none; /* Firefox */
 }
 
 
